@@ -1,0 +1,134 @@
+# PikaEngine 场景配置
+# 每个场景定义自己的 M1→M2→M3→M4→M5 管道
+
+scenes:
+  xiaohongshu:
+    name: "小红书内容运营"
+    enabled: true
+    schedule: "0 8,12,18 * * *"  # 每天三次
+    pipeline:
+      m1_acquire:
+        type: "xiaohongshu"
+        config:
+          keywords: ["AI工具", "效率提升", "副业"]
+          competitor_ids: []
+          max_items: 20
+      m2_analyze:
+        type: "trending"
+        config:
+          min_score: 0.6
+          top_n: 5
+      m3_generate:
+        model: "deepseek-chat"
+        template: "xiaohongshu_post"
+        knowledge_base: null
+      m4_execute:
+        type: "xiaohongshu_publish"
+        config:
+          auto_publish: false  # 先审核再发
+          draft_limit: 10
+      m5_feedback:
+        type: "xiaohongshu_metrics"
+        config:
+          track_fields: ["likes", "comments", "shares", "views"]
+          check_interval: 3600
+
+  gallup_agent:
+    name: "盖洛普教练Agent"
+    enabled: false  # Phase 2
+    pipeline:
+      m1_acquire:
+        type: "gallup"
+        config:
+          sources: ["coach_community", "industry_trends"]
+      m2_analyze:
+        type: "gallup_report"
+        config:
+          report_parser: "gallup_34_themes"
+      m3_generate:
+        model: "claude-sonnet-4-6"
+        template: "gallup_coach_report"
+        knowledge_base: "gallup_kb"
+      m4_execute:
+        type: "gallup_deliver"
+        config:
+          delivery_method: "api"
+
+  geo:
+    name: "GEO内容站点"
+    enabled: true
+    pipeline:
+      m1_acquire:
+        type: "geo"
+        config:
+          search_engines: ["google", "bing", "perplexity"]
+          brand_keywords: []
+      m2_analyze:
+        type: "keyword_gap"
+      m3_generate:
+        model: "deepseek-chat"
+        template: "geo_article"
+        knowledge_base: null
+      m4_execute:
+        type: "geoflow"  # 直接走GEOFlow原生发布
+        config:
+          need_review: true
+          auto_keywords: true
+          auto_description: true
+
+  quant_a_stock:
+    name: "A股量化"
+    enabled: false  # Phase 1.5
+    pipeline:
+      m1_acquire:
+        type: "quant_a_stock"
+        config:
+          data_sources: ["tushare", "akshare"]
+          symbols: []
+          indicators: ["ma", "macd", "rsi"]
+      m2_analyze:
+        type: "signal"
+        config:
+          strategy: "friend_strategy_v1"  # 朋友的策略
+      m3_generate:
+        type: "trading_signal"
+      m3_5_risk_gate:
+        enabled: true
+        config:
+          max_position_pct: 0.2
+          max_daily_loss_pct: 0.03
+          blocked_hours: ["09:15-09:30", "14:55-15:00"]
+      m4_execute:
+        type: "trading"
+        config:
+          broker: "manual"  # manual | api
+          require_confirmation: true
+
+  quant_crypto:
+    name: "加密货币量化"
+    enabled: false  # Phase 1.5
+    pipeline:
+      m1_acquire:
+        type: "quant_crypto"
+        config:
+          exchanges: ["binance", "okx"]
+          data_sources: ["ccxt", "dune", "nansen"]
+          pairs: []
+      m2_analyze:
+        type: "signal"
+        config:
+          strategy: "friend_strategy_v1"
+      m3_generate:
+        type: "trading_signal"
+      m3_5_risk_gate:
+        enabled: true
+        config:
+          max_position_pct: 0.15
+          max_daily_loss_pct: 0.05
+          min_liquidity_usd: 100000
+          max_slippage_pct: 0.01
+      m4_execute:
+        type: "trading"
+        config:
+          exchange_api: "ccxt"
+          require_confirmation: true
