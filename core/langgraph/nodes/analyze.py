@@ -1,7 +1,10 @@
 """M2: Analysis Node"""
 
 import json
+import logging
 from ..state import PipelineState
+
+log = logging.getLogger(__name__)
 
 
 def analyze_node(state: PipelineState) -> dict:
@@ -9,10 +12,11 @@ def analyze_node(state: PipelineState) -> dict:
     raw_data = state.get("raw_data", [])
 
     if not raw_data:
+        log.warning(f"[M2] {scene}: no raw data to analyze")
         return {"analyzed_items": [], "top_items": []}
 
     handlers = {
-        "xiaohongshu": _analyze_trending,
+        "xiaohongshu": _analyze_xiaohongshu,
         "gallup": _analyze_passthrough,
         "geo": _analyze_passthrough,
         "quant_a_stock": _analyze_signal,
@@ -20,29 +24,78 @@ def analyze_node(state: PipelineState) -> dict:
     }
 
     handler = handlers.get(scene, _analyze_passthrough)
-    return handler(raw_data, state.get("acquire_config", {}))
+    try:
+        result = handler(raw_data, state.get("acquire_config", {}))
+        log.info(f"[M2] {scene}: analyzed {len(result.get('analyzed_items', []))} items, "
+                 f"top {len(result.get('top_items', []))}")
+        return result
+    except Exception as e:
+        log.error(f"[M2] {scene} analyze failed: {e}")
+        return {"analyzed_items": raw_data, "top_items": raw_data[:5]}
 
 
-def _analyze_trending(raw_data: list[dict], config: dict) -> dict:
-    # TODO: LLM 热点匹配度打分
-    # 暂时按原始顺序取 top N
+def _analyze_xiaohongshu(raw_data: list[dict], config: dict) -> dict:
+    from ..tools.llm import llm_chat_json
+
+    domain = config.get("domain", "通用")
+    target_audience = config.get("target_audience", "年轻人")
     top_n = config.get("top_n", 5)
-    return {
-        "analyzed_items": raw_data,
-        "top_items": raw_data[:top_n],
-    }
+
+    items_for_analysis = []
+    for i, item in enumerate(raw_data[:30]):
+        items_for_analysis.append({
+            "index": i,
+            "title": item.get("title", "")[:80],
+            "likes": item.get("likes", item.get("heat", "0")),
+            "author": item.get("author", ""),
+        })
+
+    prompt = f"""你是小红书内容运营专家。分析以下小红书热门内容，结合「{domain}」领域，
+为目标受众「{target_audience}」筛选最有爆款潜力的话题。
+
+数据：
+{json.dumps(items_for_analysis, ensure_ascii=False, indent=2)}
+
+评估标准：
+1. 话题热度和互动潜力
+2. 与「{domain}」领域的关联度
+3. 内容差异化空间
+4. 目标受众匹配度
+
+返回JSON数组，每项包含：
+- index: 原始数据索引
+- score: 0-1 综合评分
+- reason: 一句话评分理由
+- angle: 建议的内容切入角度
+
+按 score 降序排列，最多返回 {top_n} 项。"""
+
+    scored = llm_chat_json(prompt)
+
+    if not scored or not isinstance(scored, list):
+        return {"analyzed_items": raw_data, "top_items": raw_data[:top_n]}
+
+    analyzed = list(raw_data)
+    for score_item in scored:
+        idx = score_item.get("index", -1)
+        if 0 <= idx < len(analyzed):
+            analyzed[idx]["score"] = score_item.get("score", 0)
+            analyzed[idx]["reason"] = score_item.get("reason", "")
+            analyzed[idx]["angle"] = score_item.get("angle", "")
+
+    top_items = []
+    for score_item in scored[:top_n]:
+        idx = score_item.get("index", -1)
+        if 0 <= idx < len(raw_data):
+            top_items.append({**raw_data[idx], **score_item})
+
+    return {"analyzed_items": analyzed, "top_items": top_items}
 
 
 def _analyze_signal(raw_data: list[dict], config: dict) -> dict:
-    # TODO: 接入朋友的策略模块计算信号
-    return {
-        "analyzed_items": raw_data,
-        "top_items": raw_data,
-    }
+    # TODO: 接入朋友的策略模块
+    return {"analyzed_items": raw_data, "top_items": raw_data}
 
 
 def _analyze_passthrough(raw_data: list[dict], config: dict) -> dict:
-    return {
-        "analyzed_items": raw_data,
-        "top_items": raw_data,
-    }
+    return {"analyzed_items": raw_data, "top_items": raw_data}
