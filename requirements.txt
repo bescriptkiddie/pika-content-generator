@@ -1,0 +1,20 @@
+# Core
+langgraph>=0.3.0
+langchain-core>=0.3.0
+langchain-openai>=0.3.0
+
+# API Server
+fastapi>=0.115.0
+uvicorn>=0.34.0
+pydantic>=2.0
+
+# Config
+pyyaml>=6.0
+
+# Financial Data (install as needed)
+# akshare>=1.18.0
+# ccxt>=4.0.0
+
+# Database (for checkpointing)
+# psycopg2-binary>=2.9.0
+# langgraph-checkpoint-postgres>=0.1.0
