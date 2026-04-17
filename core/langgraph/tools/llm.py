@@ -3,6 +3,7 @@
 import os
 import json
 import logging
+from pathlib import Path
 
 log = logging.getLogger(__name__)
 
@@ -10,15 +11,32 @@ log = logging.getLogger(__name__)
 _client = None
 
 
+def _load_dotenv():
+    """Load .env file from project root if python-dotenv not available."""
+    env_path = Path(__file__).resolve().parents[3] / ".env"
+    if not env_path.exists():
+        return
+    for line in env_path.read_text().splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, _, value = line.partition("=")
+        key, value = key.strip(), value.strip()
+        if not os.getenv(key):
+            os.environ[key] = value
+
+
 def get_llm_client():
     global _client
     if _client is None:
+        _load_dotenv()
+        api_key = os.getenv("LLM_API_KEY", "")
+        base_url = os.getenv("LLM_BASE_URL", "https://open.bigmodel.cn/api/anthropic/v1")
+        if not api_key:
+            raise ValueError("LLM_API_KEY not set. Copy .env.example to .env and fill in your key.")
         try:
             from openai import OpenAI
-            _client = OpenAI(
-                api_key=os.getenv("LLM_API_KEY", os.getenv("OPENAI_API_KEY", "")),
-                base_url=os.getenv("LLM_BASE_URL", "https://api.deepseek.com"),
-            )
+            _client = OpenAI(api_key=api_key, base_url=base_url)
         except ImportError:
             raise ImportError("openai package required. Run: pip install openai")
     return _client
@@ -32,7 +50,7 @@ def llm_chat(
     max_tokens: int = 4000,
 ) -> str:
     """Send a chat completion request and return the response text."""
-    model = model or os.getenv("LLM_MODEL", "deepseek-chat")
+    model = model or os.getenv("LLM_MODEL", "glm-5.1")
     client = get_llm_client()
 
     messages = []
