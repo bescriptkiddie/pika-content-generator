@@ -31,7 +31,7 @@ def get_llm_client():
     if _client is None:
         _load_dotenv()
         api_key = os.getenv("LLM_API_KEY", "")
-        base_url = os.getenv("LLM_BASE_URL", "https://open.bigmodel.cn/api/anthropic/v1")
+        base_url = os.getenv("LLM_BASE_URL", "https://open.bigmodel.cn/api/paas/v4")
         if not api_key:
             raise ValueError("LLM_API_KEY not set. Copy .env.example to .env and fill in your key.")
         try:
