@@ -3,39 +3,61 @@
 ## 总览
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                    M1 采集层架构                          │
-│                                                          │
-│  ┌─────────┐     ┌──────────────┐     ┌──────────────┐  │
-│  │ 调度层   │ ──→ │ 采集执行层   │ ──→ │ 标准化输出   │  │
-│  │ n8n/cron │     │ 场景采集器   │     │ AcquireResult│  │
-│  └─────────┘     └──────────────┘     └──────────────┘  │
-│                         │                                 │
-│         ┌───────────────┼───────────────┐                │
-│         ↓               ↓               ↓                │
-│   小红书采集器     量化数据采集器    GEO/通用采集器      │
-│   MediaCrawler     AKShare+Tushare   Crawl4AI           │
-│   Spider_XHS       CCXT             Firecrawl            │
-│   xhs_content_agent                                      │
-└─────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────┐
+│                     PikaEngine 采集层                      │
+│                                                            │
+│  ┌─────────┐     ┌──────────────┐     ┌──────────────┐   │
+│  │ 调度层   │ ──→ │ 编排层       │ ──→ │ 标准化输出   │   │
+│  │ n8n/cron │     │ LangGraph    │     │ AcquireResult│   │
+│  └─────────┘     └──────┬───────┘     └──────────────┘   │
+│                          │                                  │
+│         ┌────────────────┼────────────────┐                │
+│         ↓                ↓                ↓                │
+│  ┌────────────┐  ┌────────────┐  ┌────────────────────┐  │
+│  │ 快速查询   │  │ 深度采集   │  │ 金融数据            │  │
+│  │ bb-browser │  │ web-access │  │ AKShare+Tushare    │  │
+│  │ 103条命令  │  │ CDP+登录态 │  │ CCXT               │  │
+│  │ Crawl4AI   │  │ 反爬绕过   │  │ Dune/Nansen        │  │
+│  └────────────┘  └────────────┘  └────────────────────┘  │
+└──────────────────────────────────────────────────────────┘
+
+编排层详细设计见 → docs/langgraph-integration.md
 ```
 
 ---
 
-## 一、工作流编排层（调度 + 串联）
+## 一、编排层（调度 + 智能串联）
 
-### 推荐：n8n（自托管）
+### 调度：n8n（自托管）
 
 | 属性 | 详情 |
 |------|------|
-| 用途 | 定时触发采集→数据清洗→调用M2分析→传递给GEOFlow |
+| 用途 | 定时触发、Webhook 入口、简单 ETL |
 | 部署 | Docker 自托管，免费无限制 |
 | 调度 | 内置 Schedule Trigger + Cron 表达式 |
-| 集成 | HTTP Request节点可调任意API，支持Webhook |
-| AI | 内置AI节点，可接OpenAI/本地模型做数据处理 |
-| 优势 | 可视化编排，快速迭代，不用写调度代码 |
 
-**为什么不用 Dify？** Dify 偏 LLM 应用编排，不擅长数据采集和定时调度。n8n 是通用工作流引擎，天然适合 ETL + 定时任务场景。
+### 智能编排：LangGraph
+
+| 属性 | 详情 |
+|------|------|
+| 用途 | 多步推理、状态管理、条件分支、断点续跑、人工审批 |
+| 协议 | MIT，完全免费 |
+| 特性 | StateGraph + Checkpointing(PostgreSQL) + Human-in-the-loop |
+| 集成 | 调用 bb-browser / web-access / AKShare / CCXT / GEOFlow |
+
+**分工**：n8n 管「什么时候跑」，LangGraph 管「怎么跑复杂任务」。
+
+> 详细设计见 [LangGraph 集成方案](langgraph-integration.md)
+
+### 浏览器工具层
+
+| 工具 | 定位 | 使用场景 |
+|------|------|---------|
+| **bb-browser** | CLI 快刀，103条平台命令 | 热榜、搜索、公开数据，毫秒级 |
+| **web-access** | CDP 代理，复用真实 Chrome | 登录态、反爬平台、表单交互、发布操作 |
+| **Crawl4AI** | 自托管 LLM-ready 爬虫 | 大批量网页采集、GEO监控 |
+
+选择逻辑：公开数据 → bb-browser；需要登录 → web-access；批量网页 → Crawl4AI
 
 ---
 
@@ -147,29 +169,41 @@ pip install ccxt
 ## 五、推荐架构
 
 ```
-n8n (调度编排)
+n8n (Schedule Trigger)
+  │
+  │  HTTP POST 触发
+  ↓
+LangGraph Engine (Python)
   │
   ├── 小红书场景
-  │   └── xhs_content_agent 或 MediaCrawler
-  │       → n8n HTTP节点调用 → 输出到 GEOFlow 队列
+  │   ├── bb-browser xiaohongshu/hot → 热榜数据
+  │   ├── web-access CDP → 笔记详情（登录态）
+  │   ├── LLM 分析爆款 → 生成内容
+  │   └── web-access CDP → 发布草稿
   │
   ├── 量化A股
-  │   └── AKShare + Tushare (Python脚本)
-  │       → n8n 定时触发 → 输出到量化信号管道
+  │   ├── AKShare → 行情数据
+  │   ├── 信号计算 → 交易信号
+  │   ├── 风控网关 → 仓位/亏损检查
+  │   └── API/人工确认 → 执行
   │
   ├── 量化Crypto
-  │   └── CCXT (Python脚本)
-  │       → n8n 定时触发 → 输出到量化信号管道
+  │   ├── CCXT → 交易所数据
+  │   ├── 信号计算 → 交易信号
+  │   ├── 风控网关 → 流动性/滑点检查
+  │   └── CCXT API → 执行
   │
   ├── GEO
-  │   └── Crawl4AI
-  │       → n8n 定时触发 → 输出到 GEOFlow 任务
+  │   ├── Crawl4AI → 搜索引擎AI回答
+  │   ├── LLM 分析关键词gap
+  │   └── GEOFlow API → 入库发布
   │
   └── 盖洛普
-      └── Crawl4AI (教练社群/行业动态)
-          → n8n 定时触发 → 输出到盖洛普Agent
+      ├── Crawl4AI / bb-browser → 教练社群动态
+      └── GEOFlow AI Engine → 生成报告
 
-所有采集结果 → 标准化 AcquireResult → 写入 PostgreSQL → GEOFlow Worker 消费
+所有流程 → LangGraph StateGraph → PostgreSQL Checkpoint
+失败自动重试 / 量化交易人工审批 / 断点续跑
 ```
 
 ---
