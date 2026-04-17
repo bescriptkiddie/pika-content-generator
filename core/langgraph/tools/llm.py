@@ -1,18 +1,19 @@
-"""LLM client — unified interface for AI calls"""
+"""LLM client — Anthropic Messages API (智谱 GLM 兼容)"""
 
 import os
 import json
 import logging
 from pathlib import Path
 
+import requests as http
+
 log = logging.getLogger(__name__)
 
-# Lazy-loaded client
-_client = None
+_config = None
 
 
 def _load_dotenv():
-    """Load .env file from project root if python-dotenv not available."""
+    """Load .env file from project root."""
     env_path = Path(__file__).resolve().parents[3] / ".env"
     if not env_path.exists():
         return
@@ -26,20 +27,20 @@ def _load_dotenv():
             os.environ[key] = value
 
 
-def get_llm_client():
-    global _client
-    if _client is None:
+def _get_config() -> dict:
+    global _config
+    if _config is None:
         _load_dotenv()
         api_key = os.getenv("LLM_API_KEY", "")
-        base_url = os.getenv("LLM_BASE_URL", "https://open.bigmodel.cn/api/paas/v4")
+        base_url = os.getenv("LLM_BASE_URL", "https://open.bigmodel.cn/api/anthropic")
         if not api_key:
             raise ValueError("LLM_API_KEY not set. Copy .env.example to .env and fill in your key.")
-        try:
-            from openai import OpenAI
-            _client = OpenAI(api_key=api_key, base_url=base_url)
-        except ImportError:
-            raise ImportError("openai package required. Run: pip install openai")
-    return _client
+        _config = {
+            "api_key": api_key,
+            "base_url": base_url.rstrip("/"),
+            "model": os.getenv("LLM_MODEL", "glm-5.1"),
+        }
+    return _config
 
 
 def llm_chat(
@@ -49,23 +50,36 @@ def llm_chat(
     temperature: float = 0.7,
     max_tokens: int = 4000,
 ) -> str:
-    """Send a chat completion request and return the response text."""
-    model = model or os.getenv("LLM_MODEL", "glm-5.1")
-    client = get_llm_client()
+    """Send a message via Anthropic Messages API and return response text."""
+    cfg = _get_config()
+    model = model or cfg["model"]
+    url = f"{cfg['base_url']}/v1/messages"
 
-    messages = []
+    headers = {
+        "x-api-key": cfg["api_key"],
+        "anthropic-version": "2023-06-01",
+        "Content-Type": "application/json",
+    }
+
+    body = {
+        "model": model,
+        "max_tokens": max_tokens,
+        "messages": [{"role": "user", "content": prompt}],
+    }
     if system:
-        messages.append({"role": "system", "content": system})
-    messages.append({"role": "user", "content": prompt})
+        body["system"] = system
+    if temperature != 1.0:
+        body["temperature"] = temperature
 
-    resp = client.chat.completions.create(
-        model=model,
-        messages=messages,
-        temperature=temperature,
-        max_tokens=max_tokens,
-    )
+    resp = http.post(url, headers=headers, json=body, timeout=120)
+    resp.raise_for_status()
 
-    return resp.choices[0].message.content.strip()
+    data = resp.json()
+    content = data.get("content", [])
+    if content and content[0].get("type") == "text":
+        return content[0]["text"].strip()
+
+    raise ValueError(f"Unexpected LLM response: {json.dumps(data)[:300]}")
 
 
 def llm_chat_json(
@@ -74,18 +88,18 @@ def llm_chat_json(
     model: str = "",
     temperature: float = 0.3,
 ) -> dict | list | None:
-    """Send a chat request expecting JSON response."""
+    """Send a message expecting JSON response."""
     if "JSON" not in prompt and "json" not in prompt:
-        prompt += "\n\n请以JSON格式返回结果。"
+        prompt += "\n\n请以纯JSON格式返回结果，不要包含其他内容。"
 
     raw = llm_chat(prompt, system=system, model=model, temperature=temperature)
 
-    # Strip markdown code fences if present
+    # Strip markdown code fences
     text = raw.strip()
     if text.startswith("```"):
         lines = text.split("\n")
         lines = [l for l in lines if not l.strip().startswith("```")]
-        text = "\n".join(lines)
+        text = "\n".join(lines).strip()
 
     try:
         return json.loads(text)
