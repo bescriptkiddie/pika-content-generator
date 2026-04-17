@@ -10,3 +10,4 @@ venv/
 *.sqlite
 .DS_Store
 node_modules/
+data/drafts/
