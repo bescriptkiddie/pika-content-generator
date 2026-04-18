@@ -4,7 +4,7 @@ import subprocess
 import json
 
 
-def bb_browser_site(command: str) -> list[dict]:
+def bb_browser_site(command: str, *, timeout: int = 60) -> list[dict]:
     """Run a bb-browser site command and return parsed JSON output.
 
     Examples:
@@ -20,7 +20,7 @@ def bb_browser_site(command: str) -> list[dict]:
             cmd,
             capture_output=True,
             text=True,
-            timeout=30,
+            timeout=timeout,
         )
 
         if result.returncode != 0:

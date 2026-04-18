@@ -2,10 +2,77 @@
 # 每个场景定义自己的 M1→M2→M3→M4→M5 管道
 
 scenes:
+  xiaohongshu_growth:
+    name: "小红书-女性成长"
+    enabled: true
+    schedule: "0 8,12,18 * * *"
+    pipeline:
+      m1_acquire:
+        type: "xiaohongshu"
+        config:
+          mode: search
+          keywords: ["女性成长", "自我提升女生", "独立女性", "优势发展", "个人成长"]
+          domain: "女性成长与自我提升"
+          target_audience: "20-35岁追求自我成长的女性"
+          knowledge_sources: ["dan_koe", "james_clear", "mark_manson", "sahil_bloom"]
+          brand_voice: "温暖有力量、真诚分享、像闺蜜聊天一样"
+          top_n: 3
+
+  xiaohongshu_biz:
+    name: "小红书-个人品牌/副业"
+    enabled: true
+    schedule: "0 9,13,19 * * *"
+    pipeline:
+      m1_acquire:
+        type: "xiaohongshu"
+        config:
+          mode: search
+          keywords: ["个人品牌", "一人企业", "副业赚钱", "自媒体变现", "知识IP"]
+          domain: "个人品牌与一人企业"
+          target_audience: "25-40岁想打造个人品牌或副业变现的职场人"
+          knowledge_sources: ["dan_koe", "alex_hormozi", "justin_welsh", "naval"]
+          brand_voice: "犀利实操、不说废话、干货密度高"
+          top_n: 3
+
+  xiaohongshu_writing:
+    name: "小红书-写作/内容创作"
+    enabled: true
+    schedule: "0 10,14,20 * * *"
+    pipeline:
+      m1_acquire:
+        type: "xiaohongshu"
+        config:
+          mode: search
+          keywords: ["写作技巧", "自媒体写作", "爆款文案", "内容创作", "文笔提升"]
+          domain: "写作与内容创作"
+          target_audience: "想通过写作建立影响力的创作者"
+          knowledge_sources: ["nicolas_cole", "dickie_bush", "dan_koe"]
+          brand_voice: "专业但不装、有案例有方法"
+          top_n: 3
+
+  xiaohongshu_trending:
+    name: "小红书-全站热度感知"
+    enabled: true
+    schedule: "0 7,11,17 * * *"  # 比其他场景早1小时，作为发现层
+    pipeline:
+      m1_acquire:
+        type: "xiaohongshu"
+        config:
+          mode: trending
+          keywords: ["女性成长", "个人品牌", "一人企业", "副业赚钱", "AI工具"]
+          max_per_keyword: 5
+          cross_platforms: ["zhihu/hot", "weibo/hot", "toutiao/hot"]
+          save_daily_snapshot: true
+          domain: "女性成长与个人品牌"
+          target_audience: "20-35岁追求成长与变现的女性"
+          knowledge_sources: ["dan_koe", "alex_hormozi", "james_clear", "naval"]
+          brand_voice: "温暖有力量、真诚分享、像闺蜜聊天一样"
+          top_n: 5
+
   xiaohongshu:
     name: "小红书内容运营"
     enabled: true
-    schedule: "0 8,12,18 * * *"  # 每天三次
+    schedule: "0 8,12,18 * * *"
     pipeline:
       m1_acquire:
         type: "xiaohongshu"
@@ -21,7 +88,7 @@ scenes:
       m3_generate:
         model: "deepseek-chat"
         template: "xiaohongshu_post"
-        knowledge_base: null
+        knowledge_sources: ["dan_koe", "naval", "alex_hormozi"]
       m4_execute:
         type: "xiaohongshu_publish"
         config:
@@ -68,7 +135,7 @@ scenes:
       m3_generate:
         model: "deepseek-chat"
         template: "geo_article"
-        knowledge_base: null
+        knowledge_sources: ["dan_koe", "alex_hormozi", "james_clear", "ryan_holiday", "naval"]
       m4_execute:
         type: "geoflow"  # 直接走GEOFlow原生发布
         config:

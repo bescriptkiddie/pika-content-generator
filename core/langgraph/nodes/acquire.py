@@ -39,6 +39,8 @@ def _acquire_xiaohongshu(config: dict) -> list[dict]:
     from ..tools.xiaohongshu import (
         fetch_hot_topics, search_notes_by_keyword,
         fetch_note_detail, fetch_explore_feed,
+        fetch_platform_feed, fetch_cross_platform_trending,
+        dedup_items,
     )
 
     mode = config.get("mode", "hot")
@@ -65,6 +67,42 @@ def _acquire_xiaohongshu(config: dict) -> list[dict]:
         results = fetch_explore_feed(max_notes=config.get("max_notes", 20))
         log.info(f"[M1] xiaohongshu explore: {len(results)} notes")
 
+    elif mode == "trending":
+        # 全站热度感知：三源融合
+        all_items: list[dict] = []
+
+        # Source 1: 小红书推荐流
+        feed_items = fetch_platform_feed()
+        all_items.extend(feed_items)
+        log.info(f"[M1] trending/feed: {len(feed_items)} items")
+
+        # Source 2: 关键词搜索（赛道热点）
+        keywords = config.get("keywords", [])
+        max_per_kw = config.get("max_per_keyword", 5)
+        for kw in keywords:
+            notes = search_notes_by_keyword(kw, max_notes=max_per_kw)
+            for note in notes:
+                note["search_keyword"] = kw
+                note["source_type"] = "keyword_search"
+            all_items.extend(notes)
+            log.info(f"[M1] trending/search '{kw}': {len(notes)} notes")
+
+        # Source 3: 跨平台热榜
+        cross_platforms = config.get("cross_platforms", [
+            "zhihu/hot", "weibo/hot", "toutiao/hot",
+        ])
+        cross_items = fetch_cross_platform_trending(cross_platforms)
+        all_items.extend(cross_items)
+        log.info(f"[M1] trending/cross-platform: {len(cross_items)} items")
+
+        # 去重
+        results = dedup_items(all_items)
+        log.info(f"[M1] trending total: {len(all_items)} raw → {len(results)} deduped")
+
+        # 可选：保存每日快照
+        if config.get("save_daily_snapshot", False):
+            _save_trending_snapshot(results)
+
     # Layer 3: 深度采集笔记详情（可选）
     if config.get("fetch_details") and cdp_available():
         top_n = config.get("detail_top_n", 5)
@@ -77,6 +115,24 @@ def _acquire_xiaohongshu(config: dict) -> list[dict]:
                     log.info(f"[M1] detail fetched: {item.get('title', '')[:30]}")
 
     return results
+
+
+def _save_trending_snapshot(items: list[dict]) -> None:
+    """Save trending data to data/trending/ for historical analysis."""
+    import json
+    from datetime import datetime
+    from pathlib import Path
+
+    out_dir = Path(__file__).resolve().parents[3] / "data" / "trending"
+    out_dir.mkdir(parents=True, exist_ok=True)
+    ts = datetime.now().strftime("%Y%m%d_%H%M%S")
+    out_path = out_dir / f"trending_{ts}.json"
+    out_path.write_text(json.dumps({
+        "timestamp": ts,
+        "count": len(items),
+        "items": items,
+    }, ensure_ascii=False, indent=2))
+    log.info(f"[M1] trending snapshot saved: {out_path}")
 
 
 def _acquire_web(config: dict) -> list[dict]:

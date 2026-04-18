@@ -43,14 +43,20 @@ def _analyze_xiaohongshu(raw_data: list[dict], config: dict) -> dict:
 
     items_for_analysis = []
     for i, item in enumerate(raw_data[:30]):
-        items_for_analysis.append({
+        entry = {
             "index": i,
             "title": item.get("title", "")[:80],
             "likes": item.get("likes", item.get("heat", "0")),
             "author": item.get("author", ""),
-        })
+        }
+        # Include source info for cross-platform awareness
+        if item.get("source_platform"):
+            entry["source_platform"] = item["source_platform"]
+        if item.get("source_type") or item.get("source"):
+            entry["source_type"] = item.get("source_type", item.get("source", ""))
+        items_for_analysis.append(entry)
 
-    prompt = f"""你是小红书内容运营专家。分析以下小红书热门内容，结合「{domain}」领域，
+    prompt = f"""你是小红书内容运营专家。分析以下热门内容，结合「{domain}」领域，
 为目标受众「{target_audience}」筛选最有爆款潜力的话题。
 
 数据：
@@ -61,6 +67,7 @@ def _analyze_xiaohongshu(raw_data: list[dict], config: dict) -> dict:
 2. 与「{domain}」领域的关联度
 3. 内容差异化空间
 4. 目标受众匹配度
+5. 跨平台话题的小红书适配潜力（来自微博/知乎/头条的话题是否能转化为小红书爆款）
 
 返回JSON数组，每项包含：
 - index: 原始数据索引

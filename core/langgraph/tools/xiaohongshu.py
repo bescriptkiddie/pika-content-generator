@@ -1,12 +1,19 @@
 """Xiaohongshu (小红书) data extraction via bb-browser + web-access CDP"""
 
 import json
+import logging
+import re
 import time
+from difflib import SequenceMatcher
+from urllib.parse import urlparse
+
 from .bb_browser import bb_browser_site
 from .web_access import (
     cdp_available, cdp_open_tab, cdp_eval_json,
     cdp_scroll, cdp_close_tab,
 )
+
+log = logging.getLogger(__name__)
 
 XHS_EXPLORE_URL = "https://www.xiaohongshu.com/explore"
 XHS_SEARCH_URL = "https://www.xiaohongshu.com/search_result?keyword={keyword}&source=web_search_result_note"
@@ -177,3 +184,303 @@ def _explore_feed_extract_js(max_notes: int) -> str:
         return JSON.stringify(results);
     }})()
     """
+
+
+# --- Trending awareness functions ---
+
+def fetch_platform_feed() -> list[dict]:
+    """Fetch xiaohongshu personalized feed via bb-browser.
+
+    Returns ~35 items from the home recommendation feed with likes data.
+    """
+    raw = bb_browser_site("xiaohongshu/feed")
+
+    items = []
+    if isinstance(raw, dict):
+        raw = raw.get("notes", raw.get("items", [raw]))
+    if not isinstance(raw, list):
+        raw = []
+
+    for item in raw:
+        if isinstance(item, dict) and "error" not in item:
+            items.append({
+                "title": item.get("title", ""),
+                "likes": item.get("likes", "0"),
+                "url": item.get("url", ""),
+                "author": item.get("author", ""),
+                "source": "xhs_feed",
+                "source_platform": "xiaohongshu",
+            })
+
+    log.info(f"[xhs] platform feed: {len(items)} items")
+    return items
+
+
+# Platform-specific field mappings for cross-platform trending
+_PLATFORM_FIELD_MAP: dict[str, dict[str, list[str]]] = {
+    "zhihu": {
+        "title": ["title", "name", "question"],
+        "heat": ["heat", "hot", "score", "follower_count"],
+        "url": ["url", "link"],
+        "items_key": ["data", "items", "questions"],
+    },
+    "weibo": {
+        "title": ["title", "name", "word", "note"],
+        "heat": ["heat", "hot", "num", "score", "raw_hot"],
+        "url": ["url", "link", "scheme"],
+        "items_key": ["data", "items", "trends", "realtime"],
+    },
+    "toutiao": {
+        "title": ["title", "Title", "word", "query"],
+        "heat": ["heat", "hot", "HotValue", "score"],
+        "url": ["url", "Url", "link"],
+        "items_key": ["data", "items"],
+    },
+}
+
+
+def _extract_field(item: dict, candidates: list[str], default: str = "") -> str:
+    """Try multiple field names to extract a value."""
+    for key in candidates:
+        val = item.get(key)
+        if val is not None and str(val).strip():
+            return str(val).strip()
+    return default
+
+
+def _extract_items(raw, items_keys: list[str]) -> list[dict]:
+    """Extract item list from raw response, trying multiple key paths."""
+    if isinstance(raw, list):
+        return raw
+    if isinstance(raw, dict):
+        for key in items_keys:
+            if key in raw and isinstance(raw[key], list):
+                return raw[key]
+        # Might be a flat list at top level
+        return [raw] if "title" in raw or "name" in raw else []
+    return []
+
+
+def fetch_cross_platform_trending(
+    platforms: list[str] | None = None,
+) -> list[dict]:
+    """Fetch hot/trending lists from cross-platform sources.
+
+    Tries bb-browser site commands first, falls back to direct page scraping
+    if site adapter times out.
+
+    Args:
+        platforms: List of bb-browser site commands, e.g. ["zhihu/hot", "weibo/hot"].
+                   Defaults to zhihu + weibo + toutiao.
+
+    Returns:
+        Combined list of trending items, each tagged with source_platform.
+    """
+    if platforms is None:
+        platforms = ["zhihu/hot", "weibo/hot", "toutiao/hot"]
+
+    all_items: list[dict] = []
+
+    for cmd in platforms:
+        platform_name = cmd.split("/")[0]
+        field_map = _PLATFORM_FIELD_MAP.get(platform_name, {
+            "title": ["title", "name"],
+            "heat": ["heat", "hot", "score"],
+            "url": ["url", "link"],
+            "items_key": ["data", "items"],
+        })
+
+        items: list[dict] = []
+        try:
+            raw = bb_browser_site(cmd, timeout=90)
+            raw_items = _extract_items(raw, field_map["items_key"])
+
+            for item in raw_items:
+                if not isinstance(item, dict):
+                    continue
+                title = _extract_field(item, field_map["title"])
+                if not title:
+                    continue
+                items.append({
+                    "title": title,
+                    "heat": _extract_field(item, field_map["heat"], "0"),
+                    "url": _extract_field(item, field_map["url"]),
+                    "author": "",
+                    "source": "cross_platform",
+                    "source_platform": platform_name,
+                })
+
+        except Exception as e:
+            log.warning(f"[xhs] site {cmd} failed: {e}")
+
+        # Fallback: direct page scraping if site adapter returned nothing
+        if not items:
+            log.info(f"[xhs] site {cmd} returned 0, trying direct scrape")
+            fallback_fn = _DIRECT_SCRAPERS.get(platform_name)
+            if fallback_fn:
+                try:
+                    items = fallback_fn()
+                except Exception as e:
+                    log.warning(f"[xhs] direct scrape {platform_name} failed: {e}")
+
+        all_items.extend(items)
+        log.info(f"[xhs] cross-platform {platform_name}: {len(items)} items")
+
+    return all_items
+
+
+# --- Direct page scrapers (fallback when site adapters timeout) ---
+
+_BROWSER_HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
+    "Accept": "application/json, text/plain, */*",
+    "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8",
+}
+
+
+def _fetch_zhihu_hot_api() -> list[dict]:
+    """Fetch zhihu hot list via public API."""
+    import urllib.request
+    try:
+        req = urllib.request.Request(
+            "https://www.zhihu.com/api/v3/feed/topstory/hot-lists/total?limit=50",
+            headers={**_BROWSER_HEADERS, "Referer": "https://www.zhihu.com/hot"},
+        )
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            data = json.loads(resp.read())
+        return [
+            {
+                "title": item.get("target", {}).get("title", ""),
+                "heat": str(item.get("detail_text", "")),
+                "url": item.get("target", {}).get("url", "").replace("api.zhihu.com/questions", "www.zhihu.com/question"),
+                "author": "",
+                "source": "cross_platform",
+                "source_platform": "zhihu",
+            }
+            for item in data.get("data", [])
+            if item.get("target", {}).get("title")
+        ]
+    except Exception as e:
+        log.warning(f"[xhs] zhihu API failed: {e}")
+        return []
+
+
+def _fetch_weibo_hot_api() -> list[dict]:
+    """Fetch weibo hot search via public API."""
+    import urllib.request
+    try:
+        req = urllib.request.Request(
+            "https://weibo.com/ajax/side/hotSearch",
+            headers={**_BROWSER_HEADERS, "Referer": "https://weibo.com/"},
+        )
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            data = json.loads(resp.read())
+        return [
+            {
+                "title": item.get("word", item.get("note", "")),
+                "heat": str(item.get("raw_hot", item.get("num", ""))),
+                "url": f"https://s.weibo.com/weibo?q=%23{item.get('word', '')}%23",
+                "author": "",
+                "source": "cross_platform",
+                "source_platform": "weibo",
+            }
+            for item in data.get("data", {}).get("realtime", [])
+            if item.get("word")
+        ]
+    except Exception as e:
+        log.warning(f"[xhs] weibo API failed: {e}")
+        return []
+
+
+def _fetch_toutiao_hot_api() -> list[dict]:
+    """Fetch toutiao hot list via public API."""
+    import urllib.request
+    try:
+        req = urllib.request.Request(
+            "https://www.toutiao.com/hot-event/hot-board/?origin=toutiao_pc",
+            headers={"User-Agent": "Mozilla/5.0", "Accept": "application/json"},
+        )
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            data = json.loads(resp.read())
+        return [
+            {
+                "title": item.get("Title", item.get("title", "")),
+                "heat": str(item.get("HotValue", item.get("hot_value", ""))),
+                "url": item.get("Url", item.get("url", "")),
+                "author": "",
+                "source": "cross_platform",
+                "source_platform": "toutiao",
+            }
+            for item in data.get("data", [])
+            if item.get("Title") or item.get("title")
+        ]
+    except Exception as e:
+        log.warning(f"[xhs] toutiao API failed: {e}")
+        return []
+
+
+_DIRECT_SCRAPERS: dict[str, callable] = {
+    "zhihu": _fetch_zhihu_hot_api,
+    "weibo": _fetch_weibo_hot_api,
+    "toutiao": _fetch_toutiao_hot_api,
+}
+
+
+# --- Deduplication ---
+
+_EMOJI_RE = re.compile(r"[\U00010000-\U0010ffff]", flags=re.UNICODE)
+_PUNCT_RE = re.compile(r"[^\w\s]", flags=re.UNICODE)
+
+
+def _normalize_title(title: str) -> str:
+    """Normalize title for similarity comparison."""
+    t = _EMOJI_RE.sub("", title)
+    t = _PUNCT_RE.sub("", t)
+    return t.lower().strip()
+
+
+def _normalize_url(url: str) -> str:
+    """Normalize URL for dedup (strip query params and trailing slash)."""
+    if not url:
+        return ""
+    parsed = urlparse(url)
+    return f"{parsed.scheme}://{parsed.netloc}{parsed.path.rstrip('/')}"
+
+
+def dedup_items(items: list[dict], *, similarity_threshold: float = 0.7) -> list[dict]:
+    """Deduplicate items by URL identity and title similarity.
+
+    Earlier items in the list have priority (first-seen wins).
+    When a duplicate is found, keep the one with more engagement data.
+    """
+    seen_urls: set[str] = set()
+    seen_titles: list[str] = []
+    result: list[dict] = []
+
+    for item in items:
+        # URL dedup
+        url = _normalize_url(item.get("url", ""))
+        if url and url in seen_urls:
+            continue
+
+        # Title similarity dedup
+        title = _normalize_title(item.get("title", ""))
+        if not title:
+            continue
+
+        is_dup = False
+        for existing in seen_titles:
+            if SequenceMatcher(None, title, existing).ratio() > similarity_threshold:
+                is_dup = True
+                break
+
+        if is_dup:
+            continue
+
+        if url:
+            seen_urls.add(url)
+        seen_titles.append(title)
+        result.append(item)
+
+    log.info(f"[xhs] dedup: {len(items)} → {len(result)}")
+    return result
