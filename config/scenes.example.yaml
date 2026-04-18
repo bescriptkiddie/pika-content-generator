@@ -61,7 +61,7 @@ scenes:
           mode: trending
           keywords: ["女性成长", "个人品牌", "一人企业", "副业赚钱", "AI工具"]
           max_per_keyword: 5
-          cross_platforms: ["zhihu/hot", "weibo/hot", "toutiao/hot"]
+          cross_platforms: ["zhihu", "toutiao", "douyin", "bilibili", "36kr"]
           save_daily_snapshot: true
           domain: "女性成长与个人品牌"
           target_audience: "20-35岁追求成长与变现的女性"

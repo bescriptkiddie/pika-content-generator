@@ -89,7 +89,7 @@ def _acquire_xiaohongshu(config: dict) -> list[dict]:
 
         # Source 3: 跨平台热榜
         cross_platforms = config.get("cross_platforms", [
-            "zhihu/hot", "weibo/hot", "toutiao/hot",
+            "zhihu", "toutiao", "douyin", "bilibili", "36kr",
         ])
         cross_items = fetch_cross_platform_trending(cross_platforms)
         all_items.extend(cross_items)
