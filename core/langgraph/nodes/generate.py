@@ -40,10 +40,26 @@ def _generate_xiaohongshu(items: list[dict], config: dict) -> list[dict]:
     brand_voice = config.get("brand_voice", "真诚分享、有干货、接地气")
     generated = []
 
+    # 加载知识库上下文
+    knowledge_context = ""
+    knowledge_sources = config.get("knowledge_sources", [])
+    if knowledge_sources:
+        from core.knowledge.kb_store import load_knowledge
+        knowledge_context = load_knowledge(knowledge_sources)
+        if knowledge_context:
+            log.info(f"[M3] loaded knowledge from: {knowledge_sources} ({len(knowledge_context)} chars)")
+
     for item in items:
         title = item.get("title", "")
         angle = item.get("angle", "")
         detail_content = item.get("detail", {}).get("content", "")
+
+        knowledge_block = ""
+        if knowledge_context:
+            knowledge_block = f"""
+参考知识库（以下是行业大IP的核心观点，用于启发创作，不要直接翻译照搬，要融合转化为适合目标受众的表达）：
+{knowledge_context[:3000]}
+"""
 
         prompt = f"""你是小红书爆款内容创作者。根据以下热点话题，创作一篇小红书笔记。
 
@@ -52,6 +68,7 @@ def _generate_xiaohongshu(items: list[dict], config: dict) -> list[dict]:
 领域：{domain}
 风格要求：{brand_voice}
 {"参考内容：" + detail_content[:500] if detail_content else ""}
+{knowledge_block}
 
 创作要求：
 1. 标题：吸引眼球，包含emoji，15-25字，制造好奇心或价值感
