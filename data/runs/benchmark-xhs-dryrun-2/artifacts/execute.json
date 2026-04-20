@@ -1,0 +1,176 @@
+{
+  "execution_results": [
+    {
+      "status": "local_draft",
+      "title": "搞钱女孩必看🔥别瞎忙了！低风险开启个人IP的保姆级指南",
+      "file": "/Users/pika/ai-pika/01_项目/pika-content-generator/core/langgraph/nodes/../../../data/drafts/xhs_20260420_085619_0.json",
+      "platform": "xiaohongshu",
+      "fallback": true
+    },
+    {
+      "status": "local_draft",
+      "title": "普通女孩破局：把“做自己”变成高变现个人品牌✨",
+      "file": "/Users/pika/ai-pika/01_项目/pika-content-generator/core/langgraph/nodes/../../../data/drafts/xhs_20260420_085619_1.json",
+      "platform": "xiaohongshu",
+      "fallback": true
+    },
+    {
+      "status": "local_draft",
+      "title": "别被“一人企业”骗了！超级个体的高客单变现指南🔥",
+      "file": "/Users/pika/ai-pika/01_项目/pika-content-generator/core/langgraph/nodes/../../../data/drafts/xhs_20260420_085619_2.json",
+      "platform": "xiaohongshu",
+      "fallback": true
+    },
+    {
+      "status": "local_draft",
+      "title": "停止精神内耗！给迷茫女孩的认知清醒剂💊",
+      "file": "/Users/pika/ai-pika/01_项目/pika-content-generator/core/langgraph/nodes/../../../data/drafts/xhs_20260420_085619_3.json",
+      "platform": "xiaohongshu",
+      "fallback": true
+    },
+    {
+      "status": "local_draft",
+      "title": "听劝！别再死磕自律了，给女生的AI搞钱工具箱💰",
+      "file": "/Users/pika/ai-pika/01_项目/pika-content-generator/core/langgraph/nodes/../../../data/drafts/xhs_20260420_085619_4.json",
+      "platform": "xiaohongshu",
+      "fallback": true
+    }
+  ],
+  "decision": {
+    "fallback_seed_used": true,
+    "fallback_reason": "external_acquire_returned_empty",
+    "input_summary": {
+      "mode": "trending",
+      "keywords": [
+        "女性成长",
+        "个人品牌",
+        "一人企业",
+        "副业赚钱",
+        "AI工具"
+      ],
+      "domain": "女性成长与个人品牌",
+      "target_audience": "20-35岁追求成长与变现的女性",
+      "knowledge_sources": [
+        "dan_koe",
+        "alex_hormozi",
+        "james_clear",
+        "naval"
+      ]
+    },
+    "chosen_topics": [
+      {
+        "title": "副业赚钱 的真实痛点与可执行方法",
+        "score": 0.95,
+        "angle": "切入「女孩搞钱」视角，分享如何通过打造个人IP/自媒体，实现从0到1开启低风险副业的保姆级实操经验。",
+        "reason": "搞钱是20-35岁女性最核心的痛点与爽点，结合个人品牌的副业变现具有极强的点击与转化诱惑力。"
+      },
+      {
+        "title": "个人品牌 的真实痛点与可执行方法",
+        "score": 0.9,
+        "angle": "主打「普通女孩的破局点」，分享如何挖掘自身优势，在小红书建立高变现价值的人设与差异化标签。",
+        "reason": "完全垂直于目标领域，个人品牌是当下年轻女性摆脱职场内卷、实现个体崛起的核心杠杆。"
+      },
+      {
+        "title": "一人企业 的真实痛点与可执行方法",
+        "score": 0.85,
+        "angle": "聚焦「超级个体」模式，拆解如何不依赖大团队，仅靠个人品牌+AI工具实现高客单价变现的自由职业路径。",
+        "reason": "「一人企业」契合女性追求经济独立与生活平衡的柔性创业趋势，是个人品牌的高级进阶形态。"
+      },
+      {
+        "title": "女性成长 的真实痛点与可执行方法",
+        "score": 0.8,
+        "angle": "走「知心姐姐/大女主」人设，分享认知觉醒、拒绝精神内耗的真实故事，并在结尾自然植入个人品牌建设的价值。",
+        "reason": "女性成长自带极高的情绪共鸣与长尾流量，是建立博主与粉丝深度信任感、后续导流变现的基础。"
+      },
+      {
+        "title": "AI工具 的真实痛点与可执行方法",
+        "score": 0.75,
+        "angle": "以「给女生的AI搞钱工具箱」为噱头，分享如何用AI一键生成爆款文案/做图，实现个人品牌内容的日更与高效变现。",
+        "reason": "AI是当下的流量密码，将其包装为女性提升效率的「外挂」，能极大降低做个人IP的门槛与焦虑。"
+      }
+    ],
+    "draft_assets": [
+      {
+        "title": "搞钱女孩必看🔥别瞎忙了！低风险开启个人IP的保姆级指南",
+        "source_topic": "副业赚钱 的真实痛点与可执行方法",
+        "source_angle": "切入「女孩搞钱」视角，分享如何通过打造个人IP/自媒体，实现从0到1开启低风险副业的保姆级实操经验。",
+        "tags": [
+          "#女孩搞钱",
+          "#个人IP",
+          "#副业赚钱",
+          "#女性成长",
+          "#自媒体干货",
+          "#拒绝精神内耗",
+          "#搞钱日常",
+          "#自律"
+        ]
+      },
+      {
+        "title": "普通女孩破局：把“做自己”变成高变现个人品牌✨",
+        "source_topic": "个人品牌 的真实痛点与可执行方法",
+        "source_angle": "主打「普通女孩的破局点」，分享如何挖掘自身优势，在小红书建立高变现价值的人设与差异化标签。",
+        "tags": [
+          "#普通女孩破局",
+          "#个人品牌",
+          "#女性成长",
+          "#个人IP",
+          "#搞钱女孩",
+          "#自律与内耗",
+          "#小红书运营",
+          "#自我提升"
+        ]
+      },
+      {
+        "title": "别被“一人企业”骗了！超级个体的高客单变现指南🔥",
+        "source_topic": "一人企业 的真实痛点与可执行方法",
+        "source_angle": "聚焦「超级个体」模式，拆解如何不依赖大团队，仅靠个人品牌+AI工具实现高客单价变现的自由职业路径。",
+        "tags": [
+          "#女性成长",
+          "#超级个体",
+          "#一人企业",
+          "#个人IP",
+          "#自由职业",
+          "#搞钱女孩",
+          "#AI工具",
+          "#拒绝精神内耗"
+        ]
+      },
+      {
+        "title": "停止精神内耗！给迷茫女孩的认知清醒剂💊",
+        "source_topic": "女性成长 的真实痛点与可执行方法",
+        "source_angle": "走「知心姐姐/大女主」人设，分享认知觉醒、拒绝精神内耗的真实故事，并在结尾自然植入个人品牌建设的价值。",
+        "tags": [
+          "#女性成长",
+          "#拒绝精神内耗",
+          "#认知觉醒",
+          "#个人IP",
+          "#个人品牌",
+          "#女孩搞钱",
+          "#自律",
+          "#大女主"
+        ]
+      },
+      {
+        "title": "听劝！别再死磕自律了，给女生的AI搞钱工具箱💰",
+        "source_topic": "AI工具 的真实痛点与可执行方法",
+        "source_angle": "以「给女生的AI搞钱工具箱」为噱头，分享如何用AI一键生成爆款文案/做图，实现个人品牌内容的日更与高效变现。",
+        "tags": [
+          "#女生必看",
+          "#女性成长",
+          "#个人IP",
+          "#AI工具",
+          "#搞钱女孩",
+          "#副业搞钱",
+          "#自媒体干货",
+          "#拒绝精神内耗"
+        ]
+      }
+    ],
+    "execution_plan": {
+      "mode": "human_review_then_publish",
+      "channel": "xiaohongshu",
+      "draft_count": 5,
+      "published_count": 0
+    }
+  }
+}

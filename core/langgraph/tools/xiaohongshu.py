@@ -1,26 +1,42 @@
-"""Xiaohongshu (小红书) data extraction via bb-browser + web-access CDP"""
+"""Xiaohongshu (小红书) data extraction via bb-browser + portable browser backend"""
+
+from __future__ import annotations
 
 import json
 import logging
+import os
 import re
 import time
 from difflib import SequenceMatcher
 from urllib.parse import urlparse
 
-from .bb_browser import bb_browser_site
+from .bb_browser import bb_browser_provider_status, bb_browser_site
 from .web_access import (
-    cdp_available, cdp_open_tab, cdp_eval_json,
-    cdp_scroll, cdp_close_tab,
+    browser_available,
+    browser_open_tab,
+    browser_eval_json,
+    browser_scroll,
+    browser_close_tab,
 )
 
 log = logging.getLogger(__name__)
 
+BROWSER_PROVIDER_LABEL = "browser"
+BROWSER_SEARCH_SOURCE = "browser_search"
+BROWSER_EXPLORE_SOURCE = "browser_explore"
+
 XHS_EXPLORE_URL = "https://www.xiaohongshu.com/explore"
 XHS_SEARCH_URL = "https://www.xiaohongshu.com/search_result?keyword={keyword}&source=web_search_result_note"
+def _dailyhot_api_base(config: dict | None = None) -> str:
+    if config:
+        value = str(config.get("dailyhot_api_base", "")).strip()
+        if value:
+            return value.rstrip("/")
+    value = os.getenv("DAILYHOT_API_BASE", "http://localhost:6688").strip()
+    return value.rstrip("/") or "http://localhost:6688"
 
 
 def fetch_hot_topics() -> list[dict]:
-    """Fetch xiaohongshu hot topics via bb-browser site command."""
     raw = bb_browser_site("xiaohongshu/hot")
     topics = []
     for item in raw:
@@ -32,73 +48,98 @@ def fetch_hot_topics() -> list[dict]:
             "rank": item.get("rank", 0),
             "heat": item.get("heat", item.get("score", "")),
             "source": "bb-browser",
+            "source_platform": "xiaohongshu",
+            "source_type": "hot_topic",
         })
     return topics
 
 
-def search_notes_by_keyword(keyword: str, max_notes: int = 10) -> list[dict]:
-    """Search xiaohongshu notes by keyword via CDP (needs login state)."""
-    if not cdp_available():
-        return [{"error": "CDP not running, cannot search xiaohongshu"}]
+def search_notes_by_keyword(keyword: str, max_notes: int = 10, config: dict | None = None) -> list[dict]:
+    if not browser_available(config):
+        return []
 
     url = XHS_SEARCH_URL.format(keyword=keyword)
-    target_id = cdp_open_tab(url, wait_seconds=3.0)
+    target_id = browser_open_tab(url, wait_seconds=3.0, config=config)
     if not target_id:
-        return [{"error": f"Failed to open search page for: {keyword}"}]
+        return []
 
     try:
-        # Scroll to load more results
-        cdp_scroll(target_id, 2000)
+        browser_scroll(target_id, 2000, config=config)
         time.sleep(1.5)
-
-        # Extract note cards from search results
-        notes = cdp_eval_json(target_id, _search_result_extract_js(max_notes))
-        return notes or []
+        notes = browser_eval_json(target_id, _search_result_extract_js(max_notes), config=config)
+        if not isinstance(notes, list):
+            return []
+        return [item for item in notes if _is_valid_item(item)]
     finally:
-        cdp_close_tab(target_id)
+        browser_close_tab(target_id, config=config)
 
 
-def fetch_note_detail(note_url: str) -> dict:
-    """Fetch full detail of a single xiaohongshu note via CDP."""
-    if not cdp_available():
-        return {"error": "CDP not running"}
+def search_notes_by_keyword_via_bb(keyword: str, max_notes: int = 10) -> list[dict]:
+    raw = bb_browser_site(f"xiaohongshu/search {keyword}")
+    results = []
+    for item in raw:
+        if item.get("error"):
+            continue
+        title = item.get("title", item.get("text", ""))
+        if not title:
+            continue
+        results.append({
+            "title": title,
+            "author": item.get("author", ""),
+            "likes": item.get("likes", item.get("heat", "0")),
+            "url": item.get("url", ""),
+            "source": "bb-browser",
+            "source_platform": "xiaohongshu",
+            "source_type": "keyword_search",
+        })
+        if len(results) >= max_notes:
+            break
+    return results
 
-    target_id = cdp_open_tab(note_url, wait_seconds=3.0)
+
+def bb_search_provider_status(keyword: str) -> dict:
+    return bb_browser_provider_status(f"xiaohongshu/search {keyword}")
+
+
+def fetch_note_detail(note_url: str, config: dict | None = None) -> dict:
+    if not browser_available(config):
+        return {"error": "browser provider unavailable", "error_code": "unavailable"}
+
+    target_id = browser_open_tab(note_url, wait_seconds=3.0, config=config)
     if not target_id:
-        return {"error": f"Failed to open: {note_url}"}
+        return {"error": f"Failed to open: {note_url}", "error_code": "unavailable"}
 
     try:
-        cdp_scroll(target_id, 1500)
+        browser_scroll(target_id, 1500, config=config)
         time.sleep(1.0)
-
-        detail = cdp_eval_json(target_id, _note_detail_extract_js())
+        detail = browser_eval_json(target_id, _note_detail_extract_js(), config=config)
         if detail:
             detail["source_url"] = note_url
             return detail
-        return {"error": "Failed to extract note detail", "url": note_url}
+        return {"error": "Failed to extract note detail", "url": note_url, "error_code": "parse_error"}
     finally:
-        cdp_close_tab(target_id)
+        browser_close_tab(target_id, config=config)
 
 
-def fetch_explore_feed(max_notes: int = 20) -> list[dict]:
-    """Fetch explore/discovery feed from xiaohongshu via CDP."""
-    if not cdp_available():
-        return [{"error": "CDP not running"}]
+def fetch_explore_feed(max_notes: int = 20, config: dict | None = None) -> list[dict]:
+    if not browser_available(config):
+        return []
 
-    target_id = cdp_open_tab(XHS_EXPLORE_URL, wait_seconds=3.0)
+    target_id = browser_open_tab(XHS_EXPLORE_URL, wait_seconds=3.0, config=config)
     if not target_id:
-        return [{"error": "Failed to open explore page"}]
+        return []
 
     try:
-        # Scroll to load more content
         for _ in range(3):
-            cdp_scroll(target_id, 2000)
+            browser_scroll(target_id, 2000, config=config)
             time.sleep(1.5)
 
-        notes = cdp_eval_json(target_id, _explore_feed_extract_js(max_notes))
-        return notes or []
+        notes = browser_eval_json(target_id, _explore_feed_extract_js(max_notes), config=config)
+        if not isinstance(notes, list):
+            return []
+        return [item for item in notes if _is_valid_item(item)]
     finally:
-        cdp_close_tab(target_id)
+        browser_close_tab(target_id, config=config)
 
 
 def _search_result_extract_js(max_notes: int) -> str:
@@ -122,7 +163,7 @@ def _search_result_extract_js(max_notes: int) -> str:
                 author: authorEl?.textContent?.trim() || '',
                 likes: likesEl?.textContent?.trim() || '0',
                 url: href,
-                source: 'cdp_search',
+                source: {json.dumps(BROWSER_SEARCH_SOURCE)},
             }});
         }});
         return JSON.stringify(results);
@@ -178,7 +219,7 @@ def _explore_feed_extract_js(max_notes: int) -> str:
                 author: authorEl?.textContent?.trim() || '',
                 likes: likesEl?.textContent?.trim() || '0',
                 url: linkEl?.href || '',
-                source: 'cdp_explore',
+                source: {json.dumps(BROWSER_EXPLORE_SOURCE)},
             }});
         }});
         return JSON.stringify(results);
@@ -186,13 +227,7 @@ def _explore_feed_extract_js(max_notes: int) -> str:
     """
 
 
-# --- Trending awareness functions ---
-
 def fetch_platform_feed() -> list[dict]:
-    """Fetch xiaohongshu personalized feed via bb-browser.
-
-    Returns ~35 items from the home recommendation feed with likes data.
-    """
     raw = bb_browser_site("xiaohongshu/feed")
 
     items = []
@@ -216,29 +251,7 @@ def fetch_platform_feed() -> list[dict]:
     return items
 
 
-# --- Cross-platform trending via DailyHotApi ---
-
-import os
-import urllib.request
-
-DAILYHOT_API_BASE = os.getenv("DAILYHOT_API_BASE", "http://localhost:6688")
-
-
-def fetch_cross_platform_trending(
-    platforms: list[str] | None = None,
-) -> list[dict]:
-    """Fetch hot/trending lists from DailyHotApi (self-hosted aggregator).
-
-    DailyHotApi provides unified JSON from 50+ platforms.
-    See: https://github.com/imsyy/DailyHotApi
-
-    Args:
-        platforms: DailyHotApi route names, e.g. ["zhihu", "toutiao", "douyin"].
-                   Defaults to major platforms.
-
-    Returns:
-        Combined list of trending items, each tagged with source_platform.
-    """
+def fetch_cross_platform_trending(platforms: list[str] | None = None, config: dict | None = None) -> list[dict]:
     if platforms is None:
         platforms = ["zhihu", "toutiao", "douyin", "bilibili", "36kr"]
 
@@ -246,7 +259,7 @@ def fetch_cross_platform_trending(
 
     for platform in platforms:
         try:
-            items = _fetch_dailyhot(platform)
+            items = _fetch_dailyhot(platform, config=config)
             all_items.extend(items)
             log.info(f"[trending] {platform}: {len(items)} items")
         except Exception as e:
@@ -255,15 +268,10 @@ def fetch_cross_platform_trending(
     return all_items
 
 
-def _fetch_dailyhot(platform: str) -> list[dict]:
-    """Fetch a single platform from DailyHotApi via subprocess curl.
-
-    Uses curl instead of urllib to avoid Python HTTP client issues
-    with Docker port mapping and DailyHotApi's cold-start latency.
-    """
+def _fetch_dailyhot(platform: str, config: dict | None = None) -> list[dict]:
     import subprocess
 
-    url = f"{DAILYHOT_API_BASE}/{platform}"
+    url = f"{_dailyhot_api_base(config)}/{platform}"
     result = subprocess.run(
         ["curl", "-sf", "--max-time", "30", url],
         capture_output=True, text=True, timeout=35,
@@ -292,21 +300,17 @@ def _fetch_dailyhot(platform: str) -> list[dict]:
     return items
 
 
-# --- Deduplication ---
-
 _EMOJI_RE = re.compile(r"[\U00010000-\U0010ffff]", flags=re.UNICODE)
 _PUNCT_RE = re.compile(r"[^\w\s]", flags=re.UNICODE)
 
 
 def _normalize_title(title: str) -> str:
-    """Normalize title for similarity comparison."""
     t = _EMOJI_RE.sub("", title)
     t = _PUNCT_RE.sub("", t)
     return t.lower().strip()
 
 
 def _normalize_url(url: str) -> str:
-    """Normalize URL for dedup (strip query params and trailing slash)."""
     if not url:
         return ""
     parsed = urlparse(url)
@@ -314,22 +318,16 @@ def _normalize_url(url: str) -> str:
 
 
 def dedup_items(items: list[dict], *, similarity_threshold: float = 0.7) -> list[dict]:
-    """Deduplicate items by URL identity and title similarity.
-
-    Earlier items in the list have priority (first-seen wins).
-    When a duplicate is found, keep the one with more engagement data.
-    """
     seen_urls: set[str] = set()
     seen_titles: list[str] = []
     result: list[dict] = []
 
-    for item in items:
-        # URL dedup
+    valid_items = [item for item in items if _is_valid_item(item)]
+    for item in valid_items:
         url = _normalize_url(item.get("url", ""))
         if url and url in seen_urls:
             continue
 
-        # Title similarity dedup
         title = _normalize_title(item.get("title", ""))
         if not title:
             continue
@@ -350,3 +348,12 @@ def dedup_items(items: list[dict], *, similarity_threshold: float = 0.7) -> list
 
     log.info(f"[xhs] dedup: {len(items)} → {len(result)}")
     return result
+
+
+def _is_valid_item(item: dict) -> bool:
+    if not isinstance(item, dict):
+        return False
+    if item.get("error"):
+        return False
+    title = str(item.get("title", "")).strip()
+    return bool(title)

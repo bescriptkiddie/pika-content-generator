@@ -1,0 +1,12 @@
+{"timestamp": "2026-04-20T08:58:10.325686", "type": "run_started", "scene": "xiaohongshu_trending"}
+{"timestamp": "2026-04-20T08:58:10.329102", "type": "stage_started", "stage": "acquire"}
+{"timestamp": "2026-04-20T08:58:11.073604", "type": "stage_finished", "stage": "acquire", "status": "success", "duration_ms": 743}
+{"timestamp": "2026-04-20T08:58:11.074653", "type": "stage_started", "stage": "analyze"}
+{"timestamp": "2026-04-20T08:58:17.767552", "type": "stage_finished", "stage": "analyze", "status": "success", "duration_ms": 6692}
+{"timestamp": "2026-04-20T08:58:17.768327", "type": "stage_started", "stage": "generate"}
+{"timestamp": "2026-04-20T08:58:37.344013", "type": "stage_finished", "stage": "generate", "status": "success", "duration_ms": 19575}
+{"timestamp": "2026-04-20T08:58:37.345920", "type": "stage_started", "stage": "execute"}
+{"timestamp": "2026-04-20T08:58:38.040454", "type": "stage_finished", "stage": "execute", "status": "success", "duration_ms": 694}
+{"timestamp": "2026-04-20T08:58:38.041142", "type": "stage_started", "stage": "feedback"}
+{"timestamp": "2026-04-20T08:58:38.041688", "type": "stage_finished", "stage": "feedback", "status": "success", "duration_ms": 0}
+{"timestamp": "2026-04-20T08:58:38.043155", "type": "run_finished", "status": "completed", "error": null}

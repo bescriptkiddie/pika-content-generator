@@ -1,0 +1,81 @@
+{
+  "raw_data": [
+    {
+      "title": "女性成长 的真实痛点与可执行方法",
+      "author": "seed-generator",
+      "likes": 0,
+      "url": "",
+      "source": "seed_fallback",
+      "source_platform": "internal",
+      "source_type": "seed_topic",
+      "search_keyword": "女性成长",
+      "seed_index": 0
+    },
+    {
+      "title": "个人品牌 的真实痛点与可执行方法",
+      "author": "seed-generator",
+      "likes": 0,
+      "url": "",
+      "source": "seed_fallback",
+      "source_platform": "internal",
+      "source_type": "seed_topic",
+      "search_keyword": "个人品牌",
+      "seed_index": 1
+    },
+    {
+      "title": "一人企业 的真实痛点与可执行方法",
+      "author": "seed-generator",
+      "likes": 0,
+      "url": "",
+      "source": "seed_fallback",
+      "source_platform": "internal",
+      "source_type": "seed_topic",
+      "search_keyword": "一人企业",
+      "seed_index": 2
+    },
+    {
+      "title": "副业赚钱 的真实痛点与可执行方法",
+      "author": "seed-generator",
+      "likes": 0,
+      "url": "",
+      "source": "seed_fallback",
+      "source_platform": "internal",
+      "source_type": "seed_topic",
+      "search_keyword": "副业赚钱",
+      "seed_index": 3
+    },
+    {
+      "title": "AI工具 的真实痛点与可执行方法",
+      "author": "seed-generator",
+      "likes": 0,
+      "url": "",
+      "source": "seed_fallback",
+      "source_platform": "internal",
+      "source_type": "seed_topic",
+      "search_keyword": "AI工具",
+      "seed_index": 4
+    }
+  ],
+  "decision": {
+    "fallback_seed_used": true,
+    "fallback_reason": "external_acquire_returned_empty",
+    "input_summary": {
+      "mode": "trending",
+      "keywords": [
+        "女性成长",
+        "个人品牌",
+        "一人企业",
+        "副业赚钱",
+        "AI工具"
+      ],
+      "domain": "女性成长与个人品牌",
+      "target_audience": "20-35岁追求成长与变现的女性",
+      "knowledge_sources": [
+        "dan_koe",
+        "alex_hormozi",
+        "james_clear",
+        "naval"
+      ]
+    }
+  }
+}

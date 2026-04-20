@@ -1,0 +1,355 @@
+{
+  "analyzed_items": [
+    {
+      "title": "女性成长 的真实痛点与可执行方法",
+      "author": "seed-generator",
+      "likes": 0,
+      "url": "",
+      "source": "seed_fallback",
+      "source_platform": "internal",
+      "source_type": "seed_topic",
+      "search_keyword": "女性成长",
+      "seed_index": 0,
+      "score": 0.8,
+      "reason": "受众重合度极高，但话题较宽泛，需具象化到特定场景才能引发高互动与共鸣。",
+      "angle": "拒绝毒鸡汤，切入「戒掉讨好型人格」、「搞钱搞事业前的心理重建」等真实痛点，用逆袭经验分享提供情绪价值与行动清单。"
+    },
+    {
+      "title": "个人品牌 的真实痛点与可执行方法",
+      "author": "seed-generator",
+      "likes": 0,
+      "url": "",
+      "source": "seed_fallback",
+      "source_platform": "internal",
+      "source_type": "seed_topic",
+      "search_keyword": "个人品牌",
+      "seed_index": 1,
+      "score": 0.9,
+      "reason": "高度垂直于账号定位，精准击中女性想通过打造IP提升职场/副业竞争力的焦虑与诉求。",
+      "angle": "主打「普通人如何通过朋友圈/小红书打造吸金人设」，提供从定位、视觉统一到内容输出的保姆级实操SOP。"
+    },
+    {
+      "title": "一人企业 的真实痛点与可执行方法",
+      "author": "seed-generator",
+      "likes": 0,
+      "url": "",
+      "source": "seed_fallback",
+      "source_platform": "internal",
+      "source_type": "seed_topic",
+      "search_keyword": "一人企业",
+      "seed_index": 2,
+      "score": 0.85,
+      "reason": "迎合女性追求「时间自由、不上班」的数字游民趋势，是个人品牌与副业变现的高阶且极具逼格的呈现形式。",
+      "angle": "以「只工作不上班的女性有多爽」为情绪钩子，拆解如何将个人特长包装成一人公司，实现低风险创业与自我雇佣。"
+    },
+    {
+      "title": "副业赚钱 的真实痛点与可执行方法",
+      "author": "seed-generator",
+      "likes": 0,
+      "url": "",
+      "source": "seed_fallback",
+      "source_platform": "internal",
+      "source_type": "seed_topic",
+      "search_keyword": "副业赚钱",
+      "seed_index": 3,
+      "score": 0.95,
+      "reason": "完美契合20-35岁女性渴望经济独立与搞钱的直接痛点，变现属性极强，是小红书经久不衰的流量密码。",
+      "angle": "切入「女孩搞钱指南」或「下班后的轻资产副业」，结合个人品牌打造，分享如何利用自身技能（如小红书运营、文案、设计）实现从0到1的副业变现。"
+    },
+    {
+      "title": "AI工具 的真实痛点与可执行方法",
+      "author": "seed-generator",
+      "likes": 0,
+      "url": "",
+      "source": "seed_fallback",
+      "source_platform": "internal",
+      "source_type": "seed_topic",
+      "search_keyword": "AI工具",
+      "seed_index": 4,
+      "score": 0.75,
+      "reason": "自带极强的工具属性和干货收藏价值，是赋能女性个人品牌与副业提效的绝佳杠杆。",
+      "angle": "包装为「适合女生的搞钱AI神器」或「每天省出2小时的AI保姆级教程」，降低技术门槛，强调AI在自媒体代写、做图、找选题上的直接变现效率。"
+    }
+  ],
+  "top_items": [
+    {
+      "title": "副业赚钱 的真实痛点与可执行方法",
+      "author": "seed-generator",
+      "likes": 0,
+      "url": "",
+      "source": "seed_fallback",
+      "source_platform": "internal",
+      "source_type": "seed_topic",
+      "search_keyword": "副业赚钱",
+      "seed_index": 3,
+      "score": 0.95,
+      "reason": "完美契合20-35岁女性渴望经济独立与搞钱的直接痛点，变现属性极强，是小红书经久不衰的流量密码。",
+      "angle": "切入「女孩搞钱指南」或「下班后的轻资产副业」，结合个人品牌打造，分享如何利用自身技能（如小红书运营、文案、设计）实现从0到1的副业变现。",
+      "index": 3
+    },
+    {
+      "title": "个人品牌 的真实痛点与可执行方法",
+      "author": "seed-generator",
+      "likes": 0,
+      "url": "",
+      "source": "seed_fallback",
+      "source_platform": "internal",
+      "source_type": "seed_topic",
+      "search_keyword": "个人品牌",
+      "seed_index": 1,
+      "score": 0.9,
+      "reason": "高度垂直于账号定位，精准击中女性想通过打造IP提升职场/副业竞争力的焦虑与诉求。",
+      "angle": "主打「普通人如何通过朋友圈/小红书打造吸金人设」，提供从定位、视觉统一到内容输出的保姆级实操SOP。",
+      "index": 1
+    },
+    {
+      "title": "一人企业 的真实痛点与可执行方法",
+      "author": "seed-generator",
+      "likes": 0,
+      "url": "",
+      "source": "seed_fallback",
+      "source_platform": "internal",
+      "source_type": "seed_topic",
+      "search_keyword": "一人企业",
+      "seed_index": 2,
+      "score": 0.85,
+      "reason": "迎合女性追求「时间自由、不上班」的数字游民趋势，是个人品牌与副业变现的高阶且极具逼格的呈现形式。",
+      "angle": "以「只工作不上班的女性有多爽」为情绪钩子，拆解如何将个人特长包装成一人公司，实现低风险创业与自我雇佣。",
+      "index": 2
+    },
+    {
+      "title": "女性成长 的真实痛点与可执行方法",
+      "author": "seed-generator",
+      "likes": 0,
+      "url": "",
+      "source": "seed_fallback",
+      "source_platform": "internal",
+      "source_type": "seed_topic",
+      "search_keyword": "女性成长",
+      "seed_index": 0,
+      "score": 0.8,
+      "reason": "受众重合度极高，但话题较宽泛，需具象化到特定场景才能引发高互动与共鸣。",
+      "angle": "拒绝毒鸡汤，切入「戒掉讨好型人格」、「搞钱搞事业前的心理重建」等真实痛点，用逆袭经验分享提供情绪价值与行动清单。",
+      "index": 0
+    },
+    {
+      "title": "AI工具 的真实痛点与可执行方法",
+      "author": "seed-generator",
+      "likes": 0,
+      "url": "",
+      "source": "seed_fallback",
+      "source_platform": "internal",
+      "source_type": "seed_topic",
+      "search_keyword": "AI工具",
+      "seed_index": 4,
+      "score": 0.75,
+      "reason": "自带极强的工具属性和干货收藏价值，是赋能女性个人品牌与副业提效的绝佳杠杆。",
+      "angle": "包装为「适合女生的搞钱AI神器」或「每天省出2小时的AI保姆级教程」，降低技术门槛，强调AI在自媒体代写、做图、找选题上的直接变现效率。",
+      "index": 4
+    }
+  ],
+  "decision": {
+    "fallback_seed_used": true,
+    "fallback_reason": "external_acquire_returned_empty",
+    "provider_trace": [
+      {
+        "provider": "bb-browser:feed",
+        "status": "empty",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": true,
+        "action_required": "none",
+        "action_hint": "",
+        "reason": "provider returned empty result"
+      },
+      {
+        "provider": "bb-browser:search:女性成长",
+        "status": "error",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": true,
+        "action_required": "retry_later",
+        "action_hint": "检查 bb-browser 命令与目标站点状态",
+        "reason": "错误：Daemon HTTP 503: {\"id\":\"d1cd6396-10d6-45f7-81ad-4b73ca6a0f10\",\"success\":false,\"error\":\"Chrome not connected (CDP at 127.0.0.1:19825)\",\"reason\":\"CDP WebSocket closed unexpectedly\",\"hint\":\"Make sure Chrome is running. Try: bb-browser daemon shutdown && bb-browser tab list\"}"
+      },
+      {
+        "provider": "cdp:search:女性成长",
+        "status": "unavailable",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": true,
+        "action_required": "start_provider",
+        "action_hint": "启动本地 CDP / 浏览器代理服务",
+        "reason": "web-access CDP proxy not running"
+      },
+      {
+        "provider": "bb-browser:search:个人品牌",
+        "status": "error",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": true,
+        "action_required": "retry_later",
+        "action_hint": "检查 bb-browser 命令与目标站点状态",
+        "reason": "错误：Daemon HTTP 503: {\"id\":\"fe6e63cb-a4f3-4e8c-ac7b-471a8fb631db\",\"success\":false,\"error\":\"Chrome not connected (CDP at 127.0.0.1:19825)\",\"reason\":\"CDP WebSocket closed unexpectedly\",\"hint\":\"Make sure Chrome is running. Try: bb-browser daemon shutdown && bb-browser tab list\"}"
+      },
+      {
+        "provider": "cdp:search:个人品牌",
+        "status": "unavailable",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": true,
+        "action_required": "start_provider",
+        "action_hint": "启动本地 CDP / 浏览器代理服务",
+        "reason": "web-access CDP proxy not running"
+      },
+      {
+        "provider": "bb-browser:search:一人企业",
+        "status": "error",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": true,
+        "action_required": "retry_later",
+        "action_hint": "检查 bb-browser 命令与目标站点状态",
+        "reason": "错误：Daemon HTTP 503: {\"id\":\"bead2184-7e0a-4842-a210-384b94bbcbbf\",\"success\":false,\"error\":\"Chrome not connected (CDP at 127.0.0.1:19825)\",\"reason\":\"CDP WebSocket closed unexpectedly\",\"hint\":\"Make sure Chrome is running. Try: bb-browser daemon shutdown && bb-browser tab list\"}"
+      },
+      {
+        "provider": "cdp:search:一人企业",
+        "status": "unavailable",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": true,
+        "action_required": "start_provider",
+        "action_hint": "启动本地 CDP / 浏览器代理服务",
+        "reason": "web-access CDP proxy not running"
+      },
+      {
+        "provider": "bb-browser:search:副业赚钱",
+        "status": "error",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": true,
+        "action_required": "retry_later",
+        "action_hint": "检查 bb-browser 命令与目标站点状态",
+        "reason": "错误：Daemon HTTP 503: {\"id\":\"ecdc70ca-ef8f-4940-bc4d-f62ad2b050ce\",\"success\":false,\"error\":\"Chrome not connected (CDP at 127.0.0.1:19825)\",\"reason\":\"CDP WebSocket closed unexpectedly\",\"hint\":\"Make sure Chrome is running. Try: bb-browser daemon shutdown && bb-browser tab list\"}"
+      },
+      {
+        "provider": "cdp:search:副业赚钱",
+        "status": "unavailable",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": true,
+        "action_required": "start_provider",
+        "action_hint": "启动本地 CDP / 浏览器代理服务",
+        "reason": "web-access CDP proxy not running"
+      },
+      {
+        "provider": "bb-browser:search:AI工具",
+        "status": "error",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": true,
+        "action_required": "retry_later",
+        "action_hint": "检查 bb-browser 命令与目标站点状态",
+        "reason": "错误：Daemon HTTP 503: {\"id\":\"1661790e-c6b1-40de-bfeb-d0df0bcaab97\",\"success\":false,\"error\":\"Chrome not connected (CDP at 127.0.0.1:19825)\",\"reason\":\"CDP WebSocket closed unexpectedly\",\"hint\":\"Make sure Chrome is running. Try: bb-browser daemon shutdown && bb-browser tab list\"}"
+      },
+      {
+        "provider": "cdp:search:AI工具",
+        "status": "unavailable",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": true,
+        "action_required": "start_provider",
+        "action_hint": "启动本地 CDP / 浏览器代理服务",
+        "reason": "web-access CDP proxy not running"
+      },
+      {
+        "provider": "hosted:cross_platform",
+        "status": "empty",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": true,
+        "action_required": "retry_later",
+        "action_hint": "",
+        "reason": "provider returned empty result"
+      },
+      {
+        "provider": "seed_fallback",
+        "status": "success",
+        "usable": true,
+        "count": 5,
+        "usable_count": 5,
+        "retryable": false,
+        "action_required": "none",
+        "action_hint": "",
+        "reason": "fallback topic seeds generated"
+      }
+    ],
+    "signal_summary": {
+      "count": 0,
+      "usable_count": 0,
+      "usable": false
+    },
+    "input_summary": {
+      "mode": "trending",
+      "keywords": [
+        "女性成长",
+        "个人品牌",
+        "一人企业",
+        "副业赚钱",
+        "AI工具"
+      ],
+      "domain": "女性成长与个人品牌",
+      "target_audience": "20-35岁追求成长与变现的女性",
+      "knowledge_sources": [
+        "dan_koe",
+        "alex_hormozi",
+        "james_clear",
+        "naval"
+      ]
+    },
+    "chosen_topics": [
+      {
+        "title": "副业赚钱 的真实痛点与可执行方法",
+        "score": 0.95,
+        "angle": "切入「女孩搞钱指南」或「下班后的轻资产副业」，结合个人品牌打造，分享如何利用自身技能（如小红书运营、文案、设计）实现从0到1的副业变现。",
+        "reason": "完美契合20-35岁女性渴望经济独立与搞钱的直接痛点，变现属性极强，是小红书经久不衰的流量密码。"
+      },
+      {
+        "title": "个人品牌 的真实痛点与可执行方法",
+        "score": 0.9,
+        "angle": "主打「普通人如何通过朋友圈/小红书打造吸金人设」，提供从定位、视觉统一到内容输出的保姆级实操SOP。",
+        "reason": "高度垂直于账号定位，精准击中女性想通过打造IP提升职场/副业竞争力的焦虑与诉求。"
+      },
+      {
+        "title": "一人企业 的真实痛点与可执行方法",
+        "score": 0.85,
+        "angle": "以「只工作不上班的女性有多爽」为情绪钩子，拆解如何将个人特长包装成一人公司，实现低风险创业与自我雇佣。",
+        "reason": "迎合女性追求「时间自由、不上班」的数字游民趋势，是个人品牌与副业变现的高阶且极具逼格的呈现形式。"
+      },
+      {
+        "title": "女性成长 的真实痛点与可执行方法",
+        "score": 0.8,
+        "angle": "拒绝毒鸡汤，切入「戒掉讨好型人格」、「搞钱搞事业前的心理重建」等真实痛点，用逆袭经验分享提供情绪价值与行动清单。",
+        "reason": "受众重合度极高，但话题较宽泛，需具象化到特定场景才能引发高互动与共鸣。"
+      },
+      {
+        "title": "AI工具 的真实痛点与可执行方法",
+        "score": 0.75,
+        "angle": "包装为「适合女生的搞钱AI神器」或「每天省出2小时的AI保姆级教程」，降低技术门槛，强调AI在自媒体代写、做图、找选题上的直接变现效率。",
+        "reason": "自带极强的工具属性和干货收藏价值，是赋能女性个人品牌与副业提效的绝佳杠杆。"
+      }
+    ]
+  }
+}

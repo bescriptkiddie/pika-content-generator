@@ -12,6 +12,21 @@ scenes:
         config:
           mode: search
           keywords: ["女性成长", "自我提升女生", "独立女性", "优势发展", "个人成长"]
+          max_per_keyword: 8
+          provider_order:
+            search: ["xhs_cli_search", "bb_search", "browser_search"]
+            feed: ["xhs_cli_feed", "bb_feed", "browser_feed"]
+            cross_platform: ["hosted_cross_platform"]
+          browser_backend: playwright_persistent
+          user_data_dir: ~/.pikaengine/playwright/xiaohongshu
+          playwright_channel: chrome
+          headless: false
+          startup_timeout_ms: 30000
+          action_timeout_ms: 15000
+          navigation_timeout_ms: 30000
+          dailyhot_api_base: http://localhost:6688
+          fetch_details: false
+          detail_top_n: 3
           domain: "女性成长与自我提升"
           target_audience: "20-35岁追求自我成长的女性"
           knowledge_sources: ["dan_koe", "james_clear", "mark_manson", "sahil_bloom"]
@@ -28,6 +43,21 @@ scenes:
         config:
           mode: search
           keywords: ["个人品牌", "一人企业", "副业赚钱", "自媒体变现", "知识IP"]
+          max_per_keyword: 8
+          provider_order:
+            search: ["xhs_cli_search", "bb_search", "browser_search"]
+            feed: ["xhs_cli_feed", "bb_feed", "browser_feed"]
+            cross_platform: ["hosted_cross_platform"]
+          browser_backend: playwright_persistent
+          user_data_dir: ~/.pikaengine/playwright/xiaohongshu
+          playwright_channel: chrome
+          headless: false
+          startup_timeout_ms: 30000
+          action_timeout_ms: 15000
+          navigation_timeout_ms: 30000
+          dailyhot_api_base: http://localhost:6688
+          fetch_details: false
+          detail_top_n: 3
           domain: "个人品牌与一人企业"
           target_audience: "25-40岁想打造个人品牌或副业变现的职场人"
           knowledge_sources: ["dan_koe", "alex_hormozi", "justin_welsh", "naval"]
@@ -44,6 +74,21 @@ scenes:
         config:
           mode: search
           keywords: ["写作技巧", "自媒体写作", "爆款文案", "内容创作", "文笔提升"]
+          max_per_keyword: 8
+          provider_order:
+            search: ["xhs_cli_search", "bb_search", "browser_search"]
+            feed: ["xhs_cli_feed", "bb_feed", "browser_feed"]
+            cross_platform: ["hosted_cross_platform"]
+          browser_backend: playwright_persistent
+          user_data_dir: ~/.pikaengine/playwright/xiaohongshu
+          playwright_channel: chrome
+          headless: false
+          startup_timeout_ms: 30000
+          action_timeout_ms: 15000
+          navigation_timeout_ms: 30000
+          dailyhot_api_base: http://localhost:6688
+          fetch_details: false
+          detail_top_n: 3
           domain: "写作与内容创作"
           target_audience: "想通过写作建立影响力的创作者"
           knowledge_sources: ["nicolas_cole", "dickie_bush", "dan_koe"]
@@ -53,21 +98,47 @@ scenes:
   xiaohongshu_trending:
     name: "小红书-全站热度感知"
     enabled: true
-    schedule: "0 7,11,17 * * *"  # 比其他场景早1小时，作为发现层
+    schedule: "0 7,11,17 * * *"
     pipeline:
       m1_acquire:
         type: "xiaohongshu"
         config:
           mode: trending
           keywords: ["女性成长", "个人品牌", "一人企业", "副业赚钱", "AI工具"]
+          max_notes: 20
           max_per_keyword: 5
+          provider_order:
+            search: ["xhs_cli_search", "bb_search", "browser_search"]
+            feed: ["xhs_cli_feed", "bb_feed", "browser_feed"]
+            cross_platform: ["hosted_cross_platform"]
           cross_platforms: ["zhihu", "toutiao", "douyin", "bilibili", "36kr"]
+          browser_backend: playwright_persistent
+          user_data_dir: ~/.pikaengine/playwright/xiaohongshu
+          playwright_channel: chrome
+          headless: false
+          startup_timeout_ms: 30000
+          action_timeout_ms: 15000
+          navigation_timeout_ms: 30000
+          dailyhot_api_base: http://localhost:6688
+          fetch_details: false
+          detail_top_n: 3
           save_daily_snapshot: true
           domain: "女性成长与个人品牌"
           target_audience: "20-35岁追求成长与变现的女性"
           knowledge_sources: ["dan_koe", "alex_hormozi", "james_clear", "naval"]
           brand_voice: "温暖有力量、真诚分享、像闺蜜聊天一样"
           top_n: 5
+      m4_execute:
+        type: "xiaohongshu_publish"
+        config:
+          auto_publish: false
+          browser_backend: playwright_persistent
+          user_data_dir: ~/.pikaengine/playwright/xiaohongshu
+          playwright_channel: chrome
+          headless: false
+          startup_timeout_ms: 30000
+          action_timeout_ms: 15000
+          navigation_timeout_ms: 30000
 
   xiaohongshu:
     name: "小红书内容运营"
@@ -77,7 +148,23 @@ scenes:
       m1_acquire:
         type: "xiaohongshu"
         config:
+          mode: search
           keywords: ["AI工具", "效率提升", "副业"]
+          max_per_keyword: 10
+          provider_order:
+            search: ["xhs_cli_search", "bb_search", "browser_search"]
+            feed: ["xhs_cli_feed", "bb_feed", "browser_feed"]
+            cross_platform: ["hosted_cross_platform"]
+          browser_backend: playwright_persistent
+          user_data_dir: ~/.pikaengine/playwright/xiaohongshu
+          playwright_channel: chrome
+          headless: false
+          startup_timeout_ms: 30000
+          action_timeout_ms: 15000
+          navigation_timeout_ms: 30000
+          dailyhot_api_base: http://localhost:6688
+          fetch_details: true
+          detail_top_n: 5
           competitor_ids: []
           max_items: 20
       m2_analyze:
@@ -92,8 +179,15 @@ scenes:
       m4_execute:
         type: "xiaohongshu_publish"
         config:
-          auto_publish: false  # 先审核再发
+          auto_publish: false
           draft_limit: 10
+          browser_backend: playwright_persistent
+          user_data_dir: ~/.pikaengine/playwright/xiaohongshu
+          playwright_channel: chrome
+          headless: false
+          startup_timeout_ms: 30000
+          action_timeout_ms: 15000
+          navigation_timeout_ms: 30000
       m5_feedback:
         type: "xiaohongshu_metrics"
         config:
@@ -102,7 +196,7 @@ scenes:
 
   gallup_agent:
     name: "盖洛普教练Agent"
-    enabled: false  # Phase 2
+    enabled: false
     pipeline:
       m1_acquire:
         type: "gallup"
@@ -137,7 +231,7 @@ scenes:
         template: "geo_article"
         knowledge_sources: ["dan_koe", "alex_hormozi", "james_clear", "ryan_holiday", "naval"]
       m4_execute:
-        type: "geoflow"  # 直接走GEOFlow原生发布
+        type: "geoflow"
         config:
           need_review: true
           auto_keywords: true
@@ -145,7 +239,7 @@ scenes:
 
   quant_a_stock:
     name: "A股量化"
-    enabled: false  # Phase 1.5
+    enabled: false
     pipeline:
       m1_acquire:
         type: "quant_a_stock"
@@ -156,7 +250,7 @@ scenes:
       m2_analyze:
         type: "signal"
         config:
-          strategy: "friend_strategy_v1"  # 朋友的策略
+          strategy: "friend_strategy_v1"
       m3_generate:
         type: "trading_signal"
       m3_5_risk_gate:
@@ -168,12 +262,12 @@ scenes:
       m4_execute:
         type: "trading"
         config:
-          broker: "manual"  # manual | api
+          broker: "manual"
           require_confirmation: true
 
   quant_crypto:
     name: "加密货币量化"
-    enabled: false  # Phase 1.5
+    enabled: false
     pipeline:
       m1_acquire:
         type: "quant_crypto"

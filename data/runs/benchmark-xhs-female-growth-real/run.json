@@ -1,0 +1,150 @@
+{
+  "scene": "xiaohongshu_trending",
+  "base_scene": "xiaohongshu",
+  "trigger": "manual-real-fetch",
+  "thread_id": "benchmark-xhs-female-growth-real",
+  "status": "completed",
+  "run_plan": {
+    "scene": "xiaohongshu_trending",
+    "base_scene": "xiaohongshu",
+    "name": "小红书-全站热度感知",
+    "config_path": "/Users/pika/ai-pika/01_项目/pika-content-generator/config/scenes.example.yaml",
+    "stages": [
+      "acquire",
+      "analyze",
+      "generate",
+      "execute",
+      "feedback"
+    ],
+    "stage_configs": {
+      "acquire": {
+        "binding": "xiaohongshu.acquire",
+        "config": {
+          "mode": "search",
+          "keywords": [
+            "女性成长"
+          ],
+          "max_per_keyword": 5,
+          "domain": "女性成长",
+          "target_audience": "20-35岁关注成长的女性",
+          "knowledge_sources": [
+            "dan_koe",
+            "james_clear",
+            "naval"
+          ],
+          "brand_voice": "温暖有力量、真诚分享、像闺蜜聊天一样",
+          "top_n": 3
+        },
+        "type": "xiaohongshu",
+        "model": "",
+        "knowledge_sources": []
+      },
+      "analyze": {
+        "binding": "xiaohongshu.analyze",
+        "config": {},
+        "type": "",
+        "model": "",
+        "knowledge_sources": []
+      },
+      "generate": {
+        "binding": "xiaohongshu.generate",
+        "config": {},
+        "type": "",
+        "model": "",
+        "knowledge_sources": []
+      },
+      "risk_gate": {
+        "binding": "xiaohongshu.risk_gate",
+        "config": {},
+        "type": "",
+        "model": "",
+        "knowledge_sources": []
+      },
+      "execute": {
+        "binding": "xiaohongshu.execute",
+        "config": {
+          "auto_publish": false
+        },
+        "type": "",
+        "model": "",
+        "knowledge_sources": []
+      },
+      "feedback": {
+        "binding": "xiaohongshu.feedback",
+        "config": {},
+        "type": "",
+        "model": "",
+        "knowledge_sources": []
+      }
+    },
+    "bindings": {
+      "acquire": "xiaohongshu.acquire",
+      "analyze": "xiaohongshu.analyze",
+      "generate": "xiaohongshu.generate",
+      "execute": "xiaohongshu.execute",
+      "feedback": "xiaohongshu.feedback"
+    },
+    "policy": {
+      "scene_name": "xiaohongshu_trending",
+      "base_scene": "xiaohongshu",
+      "enabled_stages": [
+        "acquire",
+        "analyze",
+        "generate",
+        "execute",
+        "feedback"
+      ],
+      "requires_human_review": false,
+      "auto_publish": false,
+      "checkpoint": true,
+      "max_retries": 2,
+      "artifact_policy": "stage_outputs",
+      "dry_run": true
+    },
+    "overrides": {
+      "stage_configs": {
+        "acquire": {
+          "config": {
+            "mode": "search",
+            "keywords": [
+              "女性成长"
+            ],
+            "max_per_keyword": 5,
+            "domain": "女性成长",
+            "target_audience": "20-35岁关注成长的女性",
+            "knowledge_sources": [
+              "dan_koe",
+              "james_clear",
+              "naval"
+            ],
+            "brand_voice": "温暖有力量、真诚分享、像闺蜜聊天一样",
+            "top_n": 3
+          }
+        },
+        "execute": {
+          "config": {
+            "auto_publish": false
+          }
+        }
+      }
+    }
+  },
+  "started_at": "2026-04-20T08:58:10.325221",
+  "run_id": "benchmark-xhs-female-growth-real",
+  "finished_at": "2026-04-20T08:58:38.042299",
+  "feedback": {
+    "scene": "xiaohongshu",
+    "scene_name": "xiaohongshu_trending",
+    "total_executed": 1,
+    "success_count": 1,
+    "raw_items": 1,
+    "top_items": 1,
+    "generated_count": 1,
+    "draft_count": 1,
+    "published_count": 0,
+    "fallback_rate": 1.0,
+    "error_count": 0,
+    "run_status": "pass"
+  },
+  "error": null
+}

@@ -1,0 +1,154 @@
+{
+  "feedback_data": {
+    "scene": "xiaohongshu",
+    "scene_name": "xiaohongshu_trending",
+    "total_executed": 5,
+    "success_count": 5,
+    "raw_items": 5,
+    "top_items": 5,
+    "generated_count": 5,
+    "draft_count": 5,
+    "published_count": 0,
+    "fallback_rate": 1.0,
+    "error_count": 0,
+    "run_status": "pass",
+    "provider_trace": [
+      {
+        "provider": "public_feed",
+        "status": "empty",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0
+      },
+      {
+        "provider": "search:女性成长",
+        "status": "empty",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0
+      },
+      {
+        "provider": "search:个人品牌",
+        "status": "empty",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0
+      },
+      {
+        "provider": "search:一人企业",
+        "status": "empty",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0
+      },
+      {
+        "provider": "search:副业赚钱",
+        "status": "empty",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0
+      },
+      {
+        "provider": "search:AI工具",
+        "status": "empty",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0
+      },
+      {
+        "provider": "hosted_cross_platform",
+        "status": "empty",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0
+      },
+      {
+        "provider": "seed_fallback",
+        "status": "success",
+        "usable": true,
+        "count": 5,
+        "usable_count": 5
+      }
+    ],
+    "signal_summary": {
+      "count": 0,
+      "usable_count": 0,
+      "usable": false
+    },
+    "fallback_seed_used": true
+  },
+  "benchmark": {
+    "raw_items": 5,
+    "top_items": 5,
+    "generated_count": 5,
+    "draft_count": 5,
+    "published_count": 0,
+    "fallback_rate": 1.0,
+    "error_count": 0,
+    "run_status": "pass",
+    "provider_trace": [
+      {
+        "provider": "public_feed",
+        "status": "empty",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0
+      },
+      {
+        "provider": "search:女性成长",
+        "status": "empty",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0
+      },
+      {
+        "provider": "search:个人品牌",
+        "status": "empty",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0
+      },
+      {
+        "provider": "search:一人企业",
+        "status": "empty",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0
+      },
+      {
+        "provider": "search:副业赚钱",
+        "status": "empty",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0
+      },
+      {
+        "provider": "search:AI工具",
+        "status": "empty",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0
+      },
+      {
+        "provider": "hosted_cross_platform",
+        "status": "empty",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0
+      },
+      {
+        "provider": "seed_fallback",
+        "status": "success",
+        "usable": true,
+        "count": 5,
+        "usable_count": 5
+      }
+    ],
+    "signal_summary": {
+      "count": 0,
+      "usable_count": 0,
+      "usable": false
+    },
+    "fallback_seed_used": true
+  }
+}

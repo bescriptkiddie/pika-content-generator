@@ -2,10 +2,11 @@
 
 import logging
 from ..state import PipelineState
-from ..tools.web_access import cdp_available, cdp_fetch_page
+from ..tools.web_access import browser_available, browser_fetch_page
 from ..tools.bb_browser import bb_browser_site
 from ..tools.akshare_tool import fetch_a_stock
 from ..tools.ccxt_tool import fetch_crypto
+from ..tools.signal_validator import build_failure_state
 
 log = logging.getLogger(__name__)
 
@@ -27,119 +28,130 @@ def acquire_node(state: PipelineState) -> dict:
         return {"raw_data": [], "error": f"Unknown scene: {scene}"}
 
     try:
-        raw_data = handler(config)
+        acquire_result = handler(config)
+        if isinstance(acquire_result, list):
+            raw_data = acquire_result
+            provider_trace = []
+            signal_summary = {"usable": bool(raw_data), "usable_count": len(raw_data)}
+            failure_state = None
+            action_required = "none"
+            degraded = False
+        else:
+            raw_data = acquire_result.get("items", [])
+            provider_trace = acquire_result.get("provider_trace", [])
+            signal_summary = acquire_result.get("signal_summary", {"usable": bool(raw_data), "usable_count": len(raw_data)})
+            failure_state = acquire_result.get("failure_state")
+            action_required = acquire_result.get("action_required", "none")
+            degraded = acquire_result.get("degraded", False)
+        decision = state.get("decision", {})
+        if scene == "xiaohongshu":
+            if not signal_summary.get("usable"):
+                raw_data = _fallback_seed_topics(config)
+                decision = {
+                    **decision,
+                    "fallback_seed_used": True,
+                    "fallback_reason": "external_acquire_returned_empty",
+                }
+                provider_trace.append({
+                    "provider": "seed_fallback",
+                    "status": "success",
+                    "usable": True,
+                    "count": len(raw_data),
+                    "usable_count": len(raw_data),
+                    "retryable": False,
+                    "action_required": "none",
+                    "action_hint": "",
+                    "reason": "fallback topic seeds generated",
+                })
+                degraded = True
+                if not failure_state:
+                    failure_state = build_failure_state(
+                        kind="empty",
+                        stage="acquire",
+                        provider="signal_gateway",
+                        reason="all providers returned empty signals",
+                        retryable=True,
+                        action_required="none",
+                        action_hint="",
+                    )
+            else:
+                decision = {
+                    **decision,
+                    "fallback_seed_used": False,
+                }
+            decision = {
+                **decision,
+                "provider_trace": provider_trace,
+                "signal_summary": signal_summary,
+            }
         log.info(f"[M1] {scene}: acquired {len(raw_data)} items")
-        return {"raw_data": raw_data}
+        if scene == "xiaohongshu":
+            decision = {
+                **decision,
+                "input_summary": {
+                    "mode": config.get("mode", "hot"),
+                    "keywords": config.get("keywords", []),
+                    "domain": config.get("domain", "通用"),
+                    "target_audience": config.get("target_audience", "年轻人"),
+                    "knowledge_sources": config.get("knowledge_sources", []),
+                }
+            }
+        return {
+            "raw_data": raw_data,
+            "decision": decision,
+            "failure_state": failure_state,
+            "action_required": action_required,
+            "degraded": degraded,
+        }
     except Exception as e:
         log.error(f"[M1] {scene} acquire failed: {e}")
         return {"raw_data": [], "error": str(e)}
 
 
-def _acquire_xiaohongshu(config: dict) -> list[dict]:
-    from ..tools.xiaohongshu import (
-        fetch_hot_topics, search_notes_by_keyword,
-        fetch_note_detail, fetch_explore_feed,
-        fetch_platform_feed, fetch_cross_platform_trending,
-        dedup_items,
-    )
+def _acquire_xiaohongshu(config: dict) -> dict:
+    from ..tools.signal_gateway import acquire_xiaohongshu_signals
+    from ..tools.xiaohongshu import fetch_note_detail
 
-    mode = config.get("mode", "hot")
-    results = []
+    result = acquire_xiaohongshu_signals(config)
+    items = result.get("items", [])
 
-    if mode == "hot":
-        # Layer 1: bb-browser 热榜
-        results = fetch_hot_topics()
-        log.info(f"[M1] xiaohongshu hot: {len(results)} topics")
-
-    elif mode == "search":
-        # Layer 2: CDP 关键词搜索
-        keywords = config.get("keywords", [])
-        max_per_keyword = config.get("max_per_keyword", 10)
-        for kw in keywords:
-            notes = search_notes_by_keyword(kw, max_notes=max_per_keyword)
-            for note in notes:
-                note["search_keyword"] = kw
-            results.extend(notes)
-            log.info(f"[M1] xiaohongshu search '{kw}': {len(notes)} notes")
-
-    elif mode == "explore":
-        # Layer 2: CDP 发现页 feed
-        results = fetch_explore_feed(max_notes=config.get("max_notes", 20))
-        log.info(f"[M1] xiaohongshu explore: {len(results)} notes")
-
-    elif mode == "trending":
-        # 全站热度感知：三源融合
-        all_items: list[dict] = []
-
-        # Source 1: 小红书推荐流
-        feed_items = fetch_platform_feed()
-        all_items.extend(feed_items)
-        log.info(f"[M1] trending/feed: {len(feed_items)} items")
-
-        # Source 2: 关键词搜索（赛道热点）
-        keywords = config.get("keywords", [])
-        max_per_kw = config.get("max_per_keyword", 5)
-        for kw in keywords:
-            notes = search_notes_by_keyword(kw, max_notes=max_per_kw)
-            for note in notes:
-                note["search_keyword"] = kw
-                note["source_type"] = "keyword_search"
-            all_items.extend(notes)
-            log.info(f"[M1] trending/search '{kw}': {len(notes)} notes")
-
-        # Source 3: 跨平台热榜
-        cross_platforms = config.get("cross_platforms", [
-            "zhihu", "toutiao", "douyin", "bilibili", "36kr",
-        ])
-        cross_items = fetch_cross_platform_trending(cross_platforms)
-        all_items.extend(cross_items)
-        log.info(f"[M1] trending/cross-platform: {len(cross_items)} items")
-
-        # 去重
-        results = dedup_items(all_items)
-        log.info(f"[M1] trending total: {len(all_items)} raw → {len(results)} deduped")
-
-        # 可选：保存每日快照
-        if config.get("save_daily_snapshot", False):
-            _save_trending_snapshot(results)
-
-    # Layer 3: 深度采集笔记详情（可选）
-    if config.get("fetch_details") and cdp_available():
+    if config.get("fetch_details") and browser_available(config):
         top_n = config.get("detail_top_n", 5)
-        for item in results[:top_n]:
+        for item in items[:top_n]:
             url = item.get("url", "")
             if url and "xiaohongshu.com" in url:
-                detail = fetch_note_detail(url)
+                detail = fetch_note_detail(url, config=config)
                 if "error" not in detail:
                     item["detail"] = detail
                     log.info(f"[M1] detail fetched: {item.get('title', '')[:30]}")
 
-    return results
+    result["items"] = items
+    return result
 
 
-def _save_trending_snapshot(items: list[dict]) -> None:
-    """Save trending data to data/trending/ for historical analysis."""
-    import json
-    from datetime import datetime
-    from pathlib import Path
-
-    out_dir = Path(__file__).resolve().parents[3] / "data" / "trending"
-    out_dir.mkdir(parents=True, exist_ok=True)
-    ts = datetime.now().strftime("%Y%m%d_%H%M%S")
-    out_path = out_dir / f"trending_{ts}.json"
-    out_path.write_text(json.dumps({
-        "timestamp": ts,
-        "count": len(items),
-        "items": items,
-    }, ensure_ascii=False, indent=2))
-    log.info(f"[M1] trending snapshot saved: {out_path}")
+def _fallback_seed_topics(config: dict) -> list[dict]:
+    keywords = config.get("keywords", []) or [config.get("domain", "AI效率")]
+    seeds = []
+    for index, keyword in enumerate(keywords[:5]):
+        seeds.append({
+            "title": f"{keyword} 的真实痛点与可执行方法",
+            "author": "seed-generator",
+            "likes": 0,
+            "url": "",
+            "source": "seed_fallback",
+            "source_platform": "internal",
+            "source_type": "seed_topic",
+            "search_keyword": keyword,
+            "seed_index": index,
+        })
+    return seeds
 
 
 def _acquire_web(config: dict) -> list[dict]:
     results = []
     for url in config.get("urls", []):
-        if config.get("need_login") and cdp_available():
-            data = cdp_fetch_page(url, config.get("extract_js", ""))
+        if config.get("need_login") and browser_available(config):
+            data = browser_fetch_page(url, config.get("extract_js", ""), config=config)
         else:
             data = bb_browser_site(f"open {url}")
             data = data[0] if data else {}

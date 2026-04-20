@@ -1,0 +1,237 @@
+{
+  "execution_results": [
+    {
+      "status": "local_draft",
+      "title": "下班搞副业必看🔥女孩如何从0到1接单变现？",
+      "file": "/Users/pika/ai-pika/01_项目/pika-content-generator/core/langgraph/nodes/../../../data/drafts/xhs_20260420_101833_0.json",
+      "platform": "xiaohongshu",
+      "fallback": true
+    },
+    {
+      "status": "local_draft",
+      "title": "普通女孩破局指南：把“你自己”变成最赚钱的资产💰",
+      "file": "/Users/pika/ai-pika/01_项目/pika-content-generator/core/langgraph/nodes/../../../data/drafts/xhs_20260420_101833_1.json",
+      "platform": "xiaohongshu",
+      "fallback": true
+    },
+    {
+      "status": "local_draft",
+      "title": "拒绝上班！适合女生的轻资产一人公司，如何跑通闭环？✨",
+      "file": "/Users/pika/ai-pika/01_项目/pika-content-generator/core/langgraph/nodes/../../../data/drafts/xhs_20260420_101833_2.json",
+      "platform": "xiaohongshu",
+      "fallback": true
+    },
+    {
+      "status": "local_draft",
+      "title": "停止精神内耗！普通女孩觉醒搞钱脑的5个暗号💰",
+      "file": "/Users/pika/ai-pika/01_项目/pika-content-generator/core/langgraph/nodes/../../../data/drafts/xhs_20260420_101833_3.json",
+      "platform": "xiaohongshu",
+      "fallback": true
+    },
+    {
+      "status": "local_draft",
+      "title": "听劝！别瞎忙了，普通女生的AI搞钱工具箱💰✨",
+      "file": "/Users/pika/ai-pika/01_项目/pika-content-generator/core/langgraph/nodes/../../../data/drafts/xhs_20260420_101833_4.json",
+      "platform": "xiaohongshu",
+      "fallback": true
+    }
+  ],
+  "decision": {
+    "fallback_seed_used": true,
+    "fallback_reason": "external_acquire_returned_empty",
+    "provider_trace": [
+      {
+        "provider": "public_feed",
+        "status": "empty",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0
+      },
+      {
+        "provider": "search:女性成长",
+        "status": "empty",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0
+      },
+      {
+        "provider": "search:个人品牌",
+        "status": "empty",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0
+      },
+      {
+        "provider": "search:一人企业",
+        "status": "empty",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0
+      },
+      {
+        "provider": "search:副业赚钱",
+        "status": "empty",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0
+      },
+      {
+        "provider": "search:AI工具",
+        "status": "empty",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0
+      },
+      {
+        "provider": "hosted_cross_platform",
+        "status": "empty",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0
+      },
+      {
+        "provider": "seed_fallback",
+        "status": "success",
+        "usable": true,
+        "count": 5,
+        "usable_count": 5
+      }
+    ],
+    "signal_summary": {
+      "count": 0,
+      "usable_count": 0,
+      "usable": false
+    },
+    "input_summary": {
+      "mode": "trending",
+      "keywords": [
+        "女性成长",
+        "个人品牌",
+        "一人企业",
+        "副业赚钱",
+        "AI工具"
+      ],
+      "domain": "女性成长与个人品牌",
+      "target_audience": "20-35岁追求成长与变现的女性",
+      "knowledge_sources": [
+        "dan_koe",
+        "alex_hormozi",
+        "james_clear",
+        "naval"
+      ]
+    },
+    "chosen_topics": [
+      {
+        "title": "副业赚钱 的真实痛点与可执行方法",
+        "score": 0.95,
+        "angle": "切入「女孩如何利用下班时间搞副业」，结合个人品牌打造，分享从0到1接单变现的保姆级实操与避坑指南。",
+        "reason": "直击20-35岁女性搞钱与经济独立的刚需，变现属性极强，是小红书流量与互动的绝对收割机。"
+      },
+      {
+        "title": "个人品牌 的真实痛点与可执行方法",
+        "score": 0.9,
+        "angle": "主打「普通女孩如何通过放大优势打造个人IP」，提供朋友圈/小红书主页包装、人设定位与高价值变现的实操步骤。",
+        "reason": "完美契合账号定位，且迎合了女性渴望摆脱职场内卷、打造超级个体的独立人设趋势。"
+      },
+      {
+        "title": "一人企业 的真实痛点与可执行方法",
+        "score": 0.85,
+        "angle": "聚焦「适合女生的轻资产一人公司」，分享如何挖掘自身技能点，跑通最小可行性闭环，实现只工作不上班的自由。",
+        "reason": "迎合女性追求自由职业、轻资产创业的趋势，是「个人品牌」实现商业闭环的高阶升华版。"
+      },
+      {
+        "title": "女性成长 的真实痛点与可执行方法",
+        "score": 0.8,
+        "angle": "从「认知觉醒与搞钱脑」切入，分享戒掉讨好型人格、提升配得感、建立高能量状态的具体行动清单。",
+        "reason": "受众匹配度极高，容易引发情绪共鸣，但需与具体的搞钱或技能结合才能避免沦为空洞的鸡汤。"
+      },
+      {
+        "title": "AI工具 的真实痛点与可执行方法",
+        "score": 0.75,
+        "angle": "切入「适合女生的AI搞钱工具箱」，分享如何用AI辅助做自媒体内容、接商单、做电商，实现效率与变现的弯道超车。",
+        "reason": "自带前沿科技与效率红利，将AI包装为女性搞钱与做个人IP的杠杆工具，极具爆款差异化空间。"
+      }
+    ],
+    "draft_assets": [
+      {
+        "title": "下班搞副业必看🔥女孩如何从0到1接单变现？",
+        "source_topic": "副业赚钱 的真实痛点与可执行方法",
+        "source_angle": "切入「女孩如何利用下班时间搞副业」，结合个人品牌打造，分享从0到1接单变现的保姆级实操与避坑指南。",
+        "tags": [
+          "#女孩搞钱",
+          "#下班副业",
+          "#个人IP",
+          "#女性成长",
+          "#副业变现",
+          "#搞钱日常",
+          "#个人品牌"
+        ]
+      },
+      {
+        "title": "普通女孩破局指南：把“你自己”变成最赚钱的资产💰",
+        "source_topic": "个人品牌 的真实痛点与可执行方法",
+        "source_angle": "主打「普通女孩如何通过放大优势打造个人IP」，提供朋友圈/小红书主页包装、人设定位与高价值变现的实操步骤。",
+        "tags": [
+          "#个人IP",
+          "#普通女孩逆袭",
+          "#女性成长",
+          "#个人品牌",
+          "#搞钱女孩",
+          "#自媒体干货",
+          "#拒绝精神内耗",
+          "#找到你的热爱"
+        ]
+      },
+      {
+        "title": "拒绝上班！适合女生的轻资产一人公司，如何跑通闭环？✨",
+        "source_topic": "一人企业 的真实痛点与可执行方法",
+        "source_angle": "聚焦「适合女生的轻资产一人公司」，分享如何挖掘自身技能点，跑通最小可行性闭环，实现只工作不上班的自由。",
+        "tags": [
+          "#女性成长",
+          "#一人企业",
+          "#个人IP",
+          "#不上班的日子",
+          "#轻资产创业",
+          "#自由职业",
+          "#女孩搞钱",
+          "#自我提升"
+        ]
+      },
+      {
+        "title": "停止精神内耗！普通女孩觉醒搞钱脑的5个暗号💰",
+        "source_topic": "女性成长 的真实痛点与可执行方法",
+        "source_angle": "从「认知觉醒与搞钱脑」切入，分享戒掉讨好型人格、提升配得感、建立高能量状态的具体行动清单。",
+        "tags": [
+          "#女性成长",
+          "#认知觉醒",
+          "#搞钱女孩",
+          "#个人IP",
+          "#拒绝精神内耗",
+          "#高能量",
+          "#配得感"
+        ]
+      },
+      {
+        "title": "听劝！别瞎忙了，普通女生的AI搞钱工具箱💰✨",
+        "source_topic": "AI工具 的真实痛点与可执行方法",
+        "source_angle": "切入「适合女生的AI搞钱工具箱」，分享如何用AI辅助做自媒体内容、接商单、做电商，实现效率与变现的弯道超车。",
+        "tags": [
+          "#女生必看",
+          "#女性成长",
+          "#AI工具",
+          "#搞钱女孩",
+          "#自媒体干货",
+          "#个人IP",
+          "#一人企业",
+          "#自我提升"
+        ]
+      }
+    ],
+    "execution_plan": {
+      "mode": "human_review_then_publish",
+      "channel": "xiaohongshu",
+      "draft_count": 5,
+      "published_count": 0
+    }
+  }
+}

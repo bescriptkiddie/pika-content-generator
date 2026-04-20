@@ -1,6 +1,5 @@
 """M3: Content Generation Node"""
 
-import json
 import logging
 from ..state import PipelineState
 
@@ -26,8 +25,22 @@ def generate_node(state: PipelineState) -> dict:
     handler = handlers.get(scene, _generate_passthrough)
     try:
         content = handler(top_items, state.get("acquire_config", {}))
+        decision = state.get("decision", {})
+        if scene == "xiaohongshu":
+            decision = {
+                **decision,
+                "draft_assets": [
+                    {
+                        "title": item.get("title", ""),
+                        "source_topic": item.get("source_topic", ""),
+                        "source_angle": item.get("source_angle", ""),
+                        "tags": item.get("tags", []),
+                    }
+                    for item in content
+                ],
+            }
         log.info(f"[M3] {scene}: generated {len(content)} items")
-        return {"generated_content": content}
+        return {"generated_content": content, "decision": decision}
     except Exception as e:
         log.error(f"[M3] {scene} generate failed: {e}")
         return {"generated_content": [], "error": str(e)}
@@ -40,7 +53,6 @@ def _generate_xiaohongshu(items: list[dict], config: dict) -> list[dict]:
     brand_voice = config.get("brand_voice", "真诚分享、有干货、接地气")
     generated = []
 
-    # 加载知识库上下文
     knowledge_context = ""
     knowledge_sources = config.get("knowledge_sources", [])
     if knowledge_sources:
@@ -95,10 +107,10 @@ def _generate_xiaohongshu(items: list[dict], config: dict) -> list[dict]:
                 "hook": result.get("hook", ""),
                 "source_topic": title,
                 "source_angle": angle,
+                "generation_rationale": item.get("reason", ""),
             })
             log.info(f"[M3] generated post: {result.get('title', '')[:40]}")
         else:
-            # LLM JSON 解析失败，尝试纯文本生成
             text_prompt = f"""为小红书话题「{title}」创作一篇笔记。
 角度：{angle}，领域：{domain}，风格：{brand_voice}。
 包含标题、正文（300-800字）和5-8个标签。"""
@@ -113,18 +125,17 @@ def _generate_xiaohongshu(items: list[dict], config: dict) -> list[dict]:
                 "source_topic": title,
                 "source_angle": angle,
                 "raw_generation": True,
+                "generation_rationale": item.get("reason", ""),
             })
 
     return generated
 
 
 def _generate_report(items: list[dict], config: dict) -> list[dict]:
-    # TODO: 盖洛普教练报告生成
     return [{"type": "gallup_report", "items": items}]
 
 
 def _generate_article(items: list[dict], config: dict) -> list[dict]:
-    # TODO: GEO 文章生成（调用 GEOFlow API）
     return [{"type": "geo_article", "items": items}]
 
 

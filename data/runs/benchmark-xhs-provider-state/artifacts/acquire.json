@@ -1,0 +1,242 @@
+{
+  "raw_data": [
+    {
+      "title": "女性成长 的真实痛点与可执行方法",
+      "author": "seed-generator",
+      "likes": 0,
+      "url": "",
+      "source": "seed_fallback",
+      "source_platform": "internal",
+      "source_type": "seed_topic",
+      "search_keyword": "女性成长",
+      "seed_index": 0
+    },
+    {
+      "title": "个人品牌 的真实痛点与可执行方法",
+      "author": "seed-generator",
+      "likes": 0,
+      "url": "",
+      "source": "seed_fallback",
+      "source_platform": "internal",
+      "source_type": "seed_topic",
+      "search_keyword": "个人品牌",
+      "seed_index": 1
+    },
+    {
+      "title": "一人企业 的真实痛点与可执行方法",
+      "author": "seed-generator",
+      "likes": 0,
+      "url": "",
+      "source": "seed_fallback",
+      "source_platform": "internal",
+      "source_type": "seed_topic",
+      "search_keyword": "一人企业",
+      "seed_index": 2
+    },
+    {
+      "title": "副业赚钱 的真实痛点与可执行方法",
+      "author": "seed-generator",
+      "likes": 0,
+      "url": "",
+      "source": "seed_fallback",
+      "source_platform": "internal",
+      "source_type": "seed_topic",
+      "search_keyword": "副业赚钱",
+      "seed_index": 3
+    },
+    {
+      "title": "AI工具 的真实痛点与可执行方法",
+      "author": "seed-generator",
+      "likes": 0,
+      "url": "",
+      "source": "seed_fallback",
+      "source_platform": "internal",
+      "source_type": "seed_topic",
+      "search_keyword": "AI工具",
+      "seed_index": 4
+    }
+  ],
+  "decision": {
+    "fallback_seed_used": true,
+    "fallback_reason": "external_acquire_returned_empty",
+    "provider_trace": [
+      {
+        "provider": "bb-browser:feed",
+        "status": "empty",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": true,
+        "action_required": "none",
+        "action_hint": "",
+        "reason": "provider returned empty result"
+      },
+      {
+        "provider": "bb-browser:search:女性成长",
+        "status": "error",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": true,
+        "action_required": "retry_later",
+        "action_hint": "检查 bb-browser 命令与目标站点状态",
+        "reason": "错误：Daemon HTTP 503: {\"id\":\"d1cd6396-10d6-45f7-81ad-4b73ca6a0f10\",\"success\":false,\"error\":\"Chrome not connected (CDP at 127.0.0.1:19825)\",\"reason\":\"CDP WebSocket closed unexpectedly\",\"hint\":\"Make sure Chrome is running. Try: bb-browser daemon shutdown && bb-browser tab list\"}"
+      },
+      {
+        "provider": "cdp:search:女性成长",
+        "status": "unavailable",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": true,
+        "action_required": "start_provider",
+        "action_hint": "启动本地 CDP / 浏览器代理服务",
+        "reason": "web-access CDP proxy not running"
+      },
+      {
+        "provider": "bb-browser:search:个人品牌",
+        "status": "error",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": true,
+        "action_required": "retry_later",
+        "action_hint": "检查 bb-browser 命令与目标站点状态",
+        "reason": "错误：Daemon HTTP 503: {\"id\":\"fe6e63cb-a4f3-4e8c-ac7b-471a8fb631db\",\"success\":false,\"error\":\"Chrome not connected (CDP at 127.0.0.1:19825)\",\"reason\":\"CDP WebSocket closed unexpectedly\",\"hint\":\"Make sure Chrome is running. Try: bb-browser daemon shutdown && bb-browser tab list\"}"
+      },
+      {
+        "provider": "cdp:search:个人品牌",
+        "status": "unavailable",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": true,
+        "action_required": "start_provider",
+        "action_hint": "启动本地 CDP / 浏览器代理服务",
+        "reason": "web-access CDP proxy not running"
+      },
+      {
+        "provider": "bb-browser:search:一人企业",
+        "status": "error",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": true,
+        "action_required": "retry_later",
+        "action_hint": "检查 bb-browser 命令与目标站点状态",
+        "reason": "错误：Daemon HTTP 503: {\"id\":\"bead2184-7e0a-4842-a210-384b94bbcbbf\",\"success\":false,\"error\":\"Chrome not connected (CDP at 127.0.0.1:19825)\",\"reason\":\"CDP WebSocket closed unexpectedly\",\"hint\":\"Make sure Chrome is running. Try: bb-browser daemon shutdown && bb-browser tab list\"}"
+      },
+      {
+        "provider": "cdp:search:一人企业",
+        "status": "unavailable",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": true,
+        "action_required": "start_provider",
+        "action_hint": "启动本地 CDP / 浏览器代理服务",
+        "reason": "web-access CDP proxy not running"
+      },
+      {
+        "provider": "bb-browser:search:副业赚钱",
+        "status": "error",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": true,
+        "action_required": "retry_later",
+        "action_hint": "检查 bb-browser 命令与目标站点状态",
+        "reason": "错误：Daemon HTTP 503: {\"id\":\"ecdc70ca-ef8f-4940-bc4d-f62ad2b050ce\",\"success\":false,\"error\":\"Chrome not connected (CDP at 127.0.0.1:19825)\",\"reason\":\"CDP WebSocket closed unexpectedly\",\"hint\":\"Make sure Chrome is running. Try: bb-browser daemon shutdown && bb-browser tab list\"}"
+      },
+      {
+        "provider": "cdp:search:副业赚钱",
+        "status": "unavailable",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": true,
+        "action_required": "start_provider",
+        "action_hint": "启动本地 CDP / 浏览器代理服务",
+        "reason": "web-access CDP proxy not running"
+      },
+      {
+        "provider": "bb-browser:search:AI工具",
+        "status": "error",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": true,
+        "action_required": "retry_later",
+        "action_hint": "检查 bb-browser 命令与目标站点状态",
+        "reason": "错误：Daemon HTTP 503: {\"id\":\"1661790e-c6b1-40de-bfeb-d0df0bcaab97\",\"success\":false,\"error\":\"Chrome not connected (CDP at 127.0.0.1:19825)\",\"reason\":\"CDP WebSocket closed unexpectedly\",\"hint\":\"Make sure Chrome is running. Try: bb-browser daemon shutdown && bb-browser tab list\"}"
+      },
+      {
+        "provider": "cdp:search:AI工具",
+        "status": "unavailable",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": true,
+        "action_required": "start_provider",
+        "action_hint": "启动本地 CDP / 浏览器代理服务",
+        "reason": "web-access CDP proxy not running"
+      },
+      {
+        "provider": "hosted:cross_platform",
+        "status": "empty",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": true,
+        "action_required": "retry_later",
+        "action_hint": "",
+        "reason": "provider returned empty result"
+      },
+      {
+        "provider": "seed_fallback",
+        "status": "success",
+        "usable": true,
+        "count": 5,
+        "usable_count": 5,
+        "retryable": false,
+        "action_required": "none",
+        "action_hint": "",
+        "reason": "fallback topic seeds generated"
+      }
+    ],
+    "signal_summary": {
+      "count": 0,
+      "usable_count": 0,
+      "usable": false
+    },
+    "input_summary": {
+      "mode": "trending",
+      "keywords": [
+        "女性成长",
+        "个人品牌",
+        "一人企业",
+        "副业赚钱",
+        "AI工具"
+      ],
+      "domain": "女性成长与个人品牌",
+      "target_audience": "20-35岁追求成长与变现的女性",
+      "knowledge_sources": [
+        "dan_koe",
+        "alex_hormozi",
+        "james_clear",
+        "naval"
+      ]
+    }
+  },
+  "failure_state": {
+    "kind": "error",
+    "stage": "acquire",
+    "provider": "bb-browser:search:女性成长",
+    "reason": "错误：Daemon HTTP 503: {\"id\":\"d1cd6396-10d6-45f7-81ad-4b73ca6a0f10\",\"success\":false,\"error\":\"Chrome not connected (CDP at 127.0.0.1:19825)\",\"reason\":\"CDP WebSocket closed unexpectedly\",\"hint\":\"Make sure Chrome is running. Try: bb-browser daemon shutdown && bb-browser tab list\"}",
+    "retryable": true,
+    "action_required": "retry_later",
+    "action_hint": "检查 bb-browser 命令与目标站点状态"
+  },
+  "action_required": "retry_later",
+  "degraded": true
+}

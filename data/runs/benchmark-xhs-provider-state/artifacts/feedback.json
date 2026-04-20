@@ -1,0 +1,350 @@
+{
+  "feedback_data": {
+    "scene": "xiaohongshu",
+    "scene_name": "xiaohongshu_trending",
+    "total_executed": 5,
+    "success_count": 5,
+    "raw_items": 5,
+    "top_items": 5,
+    "generated_count": 5,
+    "draft_count": 5,
+    "published_count": 0,
+    "fallback_rate": 1.0,
+    "error_count": 0,
+    "run_status": "pass",
+    "provider_trace": [
+      {
+        "provider": "bb-browser:feed",
+        "status": "empty",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": true,
+        "action_required": "none",
+        "action_hint": "",
+        "reason": "provider returned empty result"
+      },
+      {
+        "provider": "bb-browser:search:女性成长",
+        "status": "error",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": true,
+        "action_required": "retry_later",
+        "action_hint": "检查 bb-browser 命令与目标站点状态",
+        "reason": "错误：Daemon HTTP 503: {\"id\":\"d1cd6396-10d6-45f7-81ad-4b73ca6a0f10\",\"success\":false,\"error\":\"Chrome not connected (CDP at 127.0.0.1:19825)\",\"reason\":\"CDP WebSocket closed unexpectedly\",\"hint\":\"Make sure Chrome is running. Try: bb-browser daemon shutdown && bb-browser tab list\"}"
+      },
+      {
+        "provider": "cdp:search:女性成长",
+        "status": "unavailable",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": true,
+        "action_required": "start_provider",
+        "action_hint": "启动本地 CDP / 浏览器代理服务",
+        "reason": "web-access CDP proxy not running"
+      },
+      {
+        "provider": "bb-browser:search:个人品牌",
+        "status": "error",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": true,
+        "action_required": "retry_later",
+        "action_hint": "检查 bb-browser 命令与目标站点状态",
+        "reason": "错误：Daemon HTTP 503: {\"id\":\"fe6e63cb-a4f3-4e8c-ac7b-471a8fb631db\",\"success\":false,\"error\":\"Chrome not connected (CDP at 127.0.0.1:19825)\",\"reason\":\"CDP WebSocket closed unexpectedly\",\"hint\":\"Make sure Chrome is running. Try: bb-browser daemon shutdown && bb-browser tab list\"}"
+      },
+      {
+        "provider": "cdp:search:个人品牌",
+        "status": "unavailable",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": true,
+        "action_required": "start_provider",
+        "action_hint": "启动本地 CDP / 浏览器代理服务",
+        "reason": "web-access CDP proxy not running"
+      },
+      {
+        "provider": "bb-browser:search:一人企业",
+        "status": "error",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": true,
+        "action_required": "retry_later",
+        "action_hint": "检查 bb-browser 命令与目标站点状态",
+        "reason": "错误：Daemon HTTP 503: {\"id\":\"bead2184-7e0a-4842-a210-384b94bbcbbf\",\"success\":false,\"error\":\"Chrome not connected (CDP at 127.0.0.1:19825)\",\"reason\":\"CDP WebSocket closed unexpectedly\",\"hint\":\"Make sure Chrome is running. Try: bb-browser daemon shutdown && bb-browser tab list\"}"
+      },
+      {
+        "provider": "cdp:search:一人企业",
+        "status": "unavailable",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": true,
+        "action_required": "start_provider",
+        "action_hint": "启动本地 CDP / 浏览器代理服务",
+        "reason": "web-access CDP proxy not running"
+      },
+      {
+        "provider": "bb-browser:search:副业赚钱",
+        "status": "error",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": true,
+        "action_required": "retry_later",
+        "action_hint": "检查 bb-browser 命令与目标站点状态",
+        "reason": "错误：Daemon HTTP 503: {\"id\":\"ecdc70ca-ef8f-4940-bc4d-f62ad2b050ce\",\"success\":false,\"error\":\"Chrome not connected (CDP at 127.0.0.1:19825)\",\"reason\":\"CDP WebSocket closed unexpectedly\",\"hint\":\"Make sure Chrome is running. Try: bb-browser daemon shutdown && bb-browser tab list\"}"
+      },
+      {
+        "provider": "cdp:search:副业赚钱",
+        "status": "unavailable",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": true,
+        "action_required": "start_provider",
+        "action_hint": "启动本地 CDP / 浏览器代理服务",
+        "reason": "web-access CDP proxy not running"
+      },
+      {
+        "provider": "bb-browser:search:AI工具",
+        "status": "error",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": true,
+        "action_required": "retry_later",
+        "action_hint": "检查 bb-browser 命令与目标站点状态",
+        "reason": "错误：Daemon HTTP 503: {\"id\":\"1661790e-c6b1-40de-bfeb-d0df0bcaab97\",\"success\":false,\"error\":\"Chrome not connected (CDP at 127.0.0.1:19825)\",\"reason\":\"CDP WebSocket closed unexpectedly\",\"hint\":\"Make sure Chrome is running. Try: bb-browser daemon shutdown && bb-browser tab list\"}"
+      },
+      {
+        "provider": "cdp:search:AI工具",
+        "status": "unavailable",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": true,
+        "action_required": "start_provider",
+        "action_hint": "启动本地 CDP / 浏览器代理服务",
+        "reason": "web-access CDP proxy not running"
+      },
+      {
+        "provider": "hosted:cross_platform",
+        "status": "empty",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": true,
+        "action_required": "retry_later",
+        "action_hint": "",
+        "reason": "provider returned empty result"
+      },
+      {
+        "provider": "seed_fallback",
+        "status": "success",
+        "usable": true,
+        "count": 5,
+        "usable_count": 5,
+        "retryable": false,
+        "action_required": "none",
+        "action_hint": "",
+        "reason": "fallback topic seeds generated"
+      }
+    ],
+    "signal_summary": {
+      "count": 0,
+      "usable_count": 0,
+      "usable": false
+    },
+    "fallback_seed_used": true,
+    "failure_state": {
+      "kind": "error",
+      "stage": "acquire",
+      "provider": "bb-browser:search:女性成长",
+      "reason": "错误：Daemon HTTP 503: {\"id\":\"d1cd6396-10d6-45f7-81ad-4b73ca6a0f10\",\"success\":false,\"error\":\"Chrome not connected (CDP at 127.0.0.1:19825)\",\"reason\":\"CDP WebSocket closed unexpectedly\",\"hint\":\"Make sure Chrome is running. Try: bb-browser daemon shutdown && bb-browser tab list\"}",
+      "retryable": true,
+      "action_required": "retry_later",
+      "action_hint": "检查 bb-browser 命令与目标站点状态"
+    },
+    "action_required": "retry_later",
+    "degraded": true
+  },
+  "benchmark": {
+    "raw_items": 5,
+    "top_items": 5,
+    "generated_count": 5,
+    "draft_count": 5,
+    "published_count": 0,
+    "fallback_rate": 1.0,
+    "error_count": 0,
+    "run_status": "pass",
+    "provider_trace": [
+      {
+        "provider": "bb-browser:feed",
+        "status": "empty",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": true,
+        "action_required": "none",
+        "action_hint": "",
+        "reason": "provider returned empty result"
+      },
+      {
+        "provider": "bb-browser:search:女性成长",
+        "status": "error",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": true,
+        "action_required": "retry_later",
+        "action_hint": "检查 bb-browser 命令与目标站点状态",
+        "reason": "错误：Daemon HTTP 503: {\"id\":\"d1cd6396-10d6-45f7-81ad-4b73ca6a0f10\",\"success\":false,\"error\":\"Chrome not connected (CDP at 127.0.0.1:19825)\",\"reason\":\"CDP WebSocket closed unexpectedly\",\"hint\":\"Make sure Chrome is running. Try: bb-browser daemon shutdown && bb-browser tab list\"}"
+      },
+      {
+        "provider": "cdp:search:女性成长",
+        "status": "unavailable",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": true,
+        "action_required": "start_provider",
+        "action_hint": "启动本地 CDP / 浏览器代理服务",
+        "reason": "web-access CDP proxy not running"
+      },
+      {
+        "provider": "bb-browser:search:个人品牌",
+        "status": "error",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": true,
+        "action_required": "retry_later",
+        "action_hint": "检查 bb-browser 命令与目标站点状态",
+        "reason": "错误：Daemon HTTP 503: {\"id\":\"fe6e63cb-a4f3-4e8c-ac7b-471a8fb631db\",\"success\":false,\"error\":\"Chrome not connected (CDP at 127.0.0.1:19825)\",\"reason\":\"CDP WebSocket closed unexpectedly\",\"hint\":\"Make sure Chrome is running. Try: bb-browser daemon shutdown && bb-browser tab list\"}"
+      },
+      {
+        "provider": "cdp:search:个人品牌",
+        "status": "unavailable",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": true,
+        "action_required": "start_provider",
+        "action_hint": "启动本地 CDP / 浏览器代理服务",
+        "reason": "web-access CDP proxy not running"
+      },
+      {
+        "provider": "bb-browser:search:一人企业",
+        "status": "error",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": true,
+        "action_required": "retry_later",
+        "action_hint": "检查 bb-browser 命令与目标站点状态",
+        "reason": "错误：Daemon HTTP 503: {\"id\":\"bead2184-7e0a-4842-a210-384b94bbcbbf\",\"success\":false,\"error\":\"Chrome not connected (CDP at 127.0.0.1:19825)\",\"reason\":\"CDP WebSocket closed unexpectedly\",\"hint\":\"Make sure Chrome is running. Try: bb-browser daemon shutdown && bb-browser tab list\"}"
+      },
+      {
+        "provider": "cdp:search:一人企业",
+        "status": "unavailable",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": true,
+        "action_required": "start_provider",
+        "action_hint": "启动本地 CDP / 浏览器代理服务",
+        "reason": "web-access CDP proxy not running"
+      },
+      {
+        "provider": "bb-browser:search:副业赚钱",
+        "status": "error",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": true,
+        "action_required": "retry_later",
+        "action_hint": "检查 bb-browser 命令与目标站点状态",
+        "reason": "错误：Daemon HTTP 503: {\"id\":\"ecdc70ca-ef8f-4940-bc4d-f62ad2b050ce\",\"success\":false,\"error\":\"Chrome not connected (CDP at 127.0.0.1:19825)\",\"reason\":\"CDP WebSocket closed unexpectedly\",\"hint\":\"Make sure Chrome is running. Try: bb-browser daemon shutdown && bb-browser tab list\"}"
+      },
+      {
+        "provider": "cdp:search:副业赚钱",
+        "status": "unavailable",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": true,
+        "action_required": "start_provider",
+        "action_hint": "启动本地 CDP / 浏览器代理服务",
+        "reason": "web-access CDP proxy not running"
+      },
+      {
+        "provider": "bb-browser:search:AI工具",
+        "status": "error",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": true,
+        "action_required": "retry_later",
+        "action_hint": "检查 bb-browser 命令与目标站点状态",
+        "reason": "错误：Daemon HTTP 503: {\"id\":\"1661790e-c6b1-40de-bfeb-d0df0bcaab97\",\"success\":false,\"error\":\"Chrome not connected (CDP at 127.0.0.1:19825)\",\"reason\":\"CDP WebSocket closed unexpectedly\",\"hint\":\"Make sure Chrome is running. Try: bb-browser daemon shutdown && bb-browser tab list\"}"
+      },
+      {
+        "provider": "cdp:search:AI工具",
+        "status": "unavailable",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": true,
+        "action_required": "start_provider",
+        "action_hint": "启动本地 CDP / 浏览器代理服务",
+        "reason": "web-access CDP proxy not running"
+      },
+      {
+        "provider": "hosted:cross_platform",
+        "status": "empty",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": true,
+        "action_required": "retry_later",
+        "action_hint": "",
+        "reason": "provider returned empty result"
+      },
+      {
+        "provider": "seed_fallback",
+        "status": "success",
+        "usable": true,
+        "count": 5,
+        "usable_count": 5,
+        "retryable": false,
+        "action_required": "none",
+        "action_hint": "",
+        "reason": "fallback topic seeds generated"
+      }
+    ],
+    "signal_summary": {
+      "count": 0,
+      "usable_count": 0,
+      "usable": false
+    },
+    "fallback_seed_used": true,
+    "failure_state": {
+      "kind": "error",
+      "stage": "acquire",
+      "provider": "bb-browser:search:女性成长",
+      "reason": "错误：Daemon HTTP 503: {\"id\":\"d1cd6396-10d6-45f7-81ad-4b73ca6a0f10\",\"success\":false,\"error\":\"Chrome not connected (CDP at 127.0.0.1:19825)\",\"reason\":\"CDP WebSocket closed unexpectedly\",\"hint\":\"Make sure Chrome is running. Try: bb-browser daemon shutdown && bb-browser tab list\"}",
+      "retryable": true,
+      "action_required": "retry_later",
+      "action_hint": "检查 bb-browser 命令与目标站点状态"
+    },
+    "action_required": "retry_later",
+    "degraded": true
+  }
+}

@@ -1,0 +1,151 @@
+{
+  "scene": "xiaohongshu_trending",
+  "base_scene": "xiaohongshu",
+  "trigger": "cli",
+  "thread_id": "benchmark-xhs-xhscli",
+  "status": "failed",
+  "run_plan": {
+    "scene": "xiaohongshu_trending",
+    "base_scene": "xiaohongshu",
+    "name": "小红书-全站热度感知",
+    "config_path": "/Users/pika/ai-pika/01_项目/pika-content-generator/config/scenes.example.yaml",
+    "stages": [
+      "acquire",
+      "analyze",
+      "generate",
+      "execute",
+      "feedback"
+    ],
+    "stage_configs": {
+      "acquire": {
+        "binding": "xiaohongshu.acquire",
+        "config": {
+          "mode": "trending",
+          "keywords": [
+            "女性成长",
+            "个人品牌",
+            "一人企业",
+            "副业赚钱",
+            "AI工具"
+          ],
+          "max_per_keyword": 5,
+          "cross_platforms": [
+            "zhihu",
+            "toutiao",
+            "douyin",
+            "bilibili",
+            "36kr"
+          ],
+          "save_daily_snapshot": true,
+          "domain": "女性成长与个人品牌",
+          "target_audience": "20-35岁追求成长与变现的女性",
+          "knowledge_sources": [
+            "dan_koe",
+            "alex_hormozi",
+            "james_clear",
+            "naval"
+          ],
+          "brand_voice": "温暖有力量、真诚分享、像闺蜜聊天一样",
+          "top_n": 5
+        },
+        "type": "xiaohongshu",
+        "model": "",
+        "knowledge_sources": []
+      },
+      "analyze": {
+        "binding": "xiaohongshu.analyze",
+        "config": {},
+        "type": "",
+        "model": "",
+        "knowledge_sources": []
+      },
+      "generate": {
+        "binding": "xiaohongshu.generate",
+        "config": {},
+        "type": "",
+        "model": "",
+        "knowledge_sources": []
+      },
+      "risk_gate": {
+        "binding": "xiaohongshu.risk_gate",
+        "config": {},
+        "type": "",
+        "model": "",
+        "knowledge_sources": []
+      },
+      "execute": {
+        "binding": "xiaohongshu.execute",
+        "config": {
+          "auto_publish": false
+        },
+        "type": "",
+        "model": "",
+        "knowledge_sources": []
+      },
+      "feedback": {
+        "binding": "xiaohongshu.feedback",
+        "config": {},
+        "type": "",
+        "model": "",
+        "knowledge_sources": []
+      }
+    },
+    "bindings": {
+      "acquire": "xiaohongshu.acquire",
+      "analyze": "xiaohongshu.analyze",
+      "generate": "xiaohongshu.generate",
+      "execute": "xiaohongshu.execute",
+      "feedback": "xiaohongshu.feedback"
+    },
+    "policy": {
+      "scene_name": "xiaohongshu_trending",
+      "base_scene": "xiaohongshu",
+      "enabled_stages": [
+        "acquire",
+        "analyze",
+        "generate",
+        "execute",
+        "feedback"
+      ],
+      "requires_human_review": false,
+      "auto_publish": false,
+      "checkpoint": true,
+      "max_retries": 2,
+      "artifact_policy": "stage_outputs",
+      "dry_run": true
+    },
+    "overrides": {
+      "stage_configs": {}
+    }
+  },
+  "started_at": "2026-04-20T15:32:26.972556",
+  "run_id": "benchmark-xhs-xhscli",
+  "finished_at": "2026-04-20T15:32:26.979036",
+  "feedback": {
+    "scene": "xiaohongshu",
+    "scene_name": "xiaohongshu_trending",
+    "total_executed": 0,
+    "success_count": 0,
+    "raw_items": 0,
+    "top_items": 0,
+    "generated_count": 0,
+    "draft_count": 0,
+    "published_count": 0,
+    "fallback_rate": 0.0,
+    "error_count": 0,
+    "run_status": "fail",
+    "provider_trace": [],
+    "signal_summary": {},
+    "fallback_seed_used": false,
+    "failure_state": null,
+    "action_required": "none",
+    "degraded": false,
+    "provider_success_count": 0,
+    "provider_failure_count": 0,
+    "provider_empty_count": 0
+  },
+  "error": "No module named 'xhs_cli'",
+  "failure_state": null,
+  "action_required": "none",
+  "degraded": false
+}

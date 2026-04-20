@@ -1,0 +1,32 @@
+{
+  "raw_data": [
+    {
+      "title": "女性成长 的真实痛点与可执行方法",
+      "author": "seed-generator",
+      "likes": 0,
+      "url": "",
+      "source": "seed_fallback",
+      "source_platform": "internal",
+      "source_type": "seed_topic",
+      "search_keyword": "女性成长",
+      "seed_index": 0
+    }
+  ],
+  "decision": {
+    "fallback_seed_used": true,
+    "fallback_reason": "external_acquire_returned_empty",
+    "input_summary": {
+      "mode": "search",
+      "keywords": [
+        "女性成长"
+      ],
+      "domain": "女性成长",
+      "target_audience": "20-35岁关注成长的女性",
+      "knowledge_sources": [
+        "dan_koe",
+        "james_clear",
+        "naval"
+      ]
+    }
+  }
+}

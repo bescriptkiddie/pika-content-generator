@@ -1,0 +1,268 @@
+{
+  "analyzed_items": [
+    {
+      "title": "女性成长 的真实痛点与可执行方法",
+      "author": "seed-generator",
+      "likes": 0,
+      "url": "",
+      "source": "seed_fallback",
+      "source_platform": "internal",
+      "source_type": "seed_topic",
+      "search_keyword": "女性成长",
+      "seed_index": 0,
+      "score": 0.8,
+      "reason": "受众匹配度极高，容易引发情绪共鸣，但需与具体的搞钱或技能结合才能避免沦为空洞的鸡汤。",
+      "angle": "从「认知觉醒与搞钱脑」切入，分享戒掉讨好型人格、提升配得感、建立高能量状态的具体行动清单。"
+    },
+    {
+      "title": "个人品牌 的真实痛点与可执行方法",
+      "author": "seed-generator",
+      "likes": 0,
+      "url": "",
+      "source": "seed_fallback",
+      "source_platform": "internal",
+      "source_type": "seed_topic",
+      "search_keyword": "个人品牌",
+      "seed_index": 1,
+      "score": 0.9,
+      "reason": "完美契合账号定位，且迎合了女性渴望摆脱职场内卷、打造超级个体的独立人设趋势。",
+      "angle": "主打「普通女孩如何通过放大优势打造个人IP」，提供朋友圈/小红书主页包装、人设定位与高价值变现的实操步骤。"
+    },
+    {
+      "title": "一人企业 的真实痛点与可执行方法",
+      "author": "seed-generator",
+      "likes": 0,
+      "url": "",
+      "source": "seed_fallback",
+      "source_platform": "internal",
+      "source_type": "seed_topic",
+      "search_keyword": "一人企业",
+      "seed_index": 2,
+      "score": 0.85,
+      "reason": "迎合女性追求自由职业、轻资产创业的趋势，是「个人品牌」实现商业闭环的高阶升华版。",
+      "angle": "聚焦「适合女生的轻资产一人公司」，分享如何挖掘自身技能点，跑通最小可行性闭环，实现只工作不上班的自由。"
+    },
+    {
+      "title": "副业赚钱 的真实痛点与可执行方法",
+      "author": "seed-generator",
+      "likes": 0,
+      "url": "",
+      "source": "seed_fallback",
+      "source_platform": "internal",
+      "source_type": "seed_topic",
+      "search_keyword": "副业赚钱",
+      "seed_index": 3,
+      "score": 0.95,
+      "reason": "直击20-35岁女性搞钱与经济独立的刚需，变现属性极强，是小红书流量与互动的绝对收割机。",
+      "angle": "切入「女孩如何利用下班时间搞副业」，结合个人品牌打造，分享从0到1接单变现的保姆级实操与避坑指南。"
+    },
+    {
+      "title": "AI工具 的真实痛点与可执行方法",
+      "author": "seed-generator",
+      "likes": 0,
+      "url": "",
+      "source": "seed_fallback",
+      "source_platform": "internal",
+      "source_type": "seed_topic",
+      "search_keyword": "AI工具",
+      "seed_index": 4,
+      "score": 0.75,
+      "reason": "自带前沿科技与效率红利，将AI包装为女性搞钱与做个人IP的杠杆工具，极具爆款差异化空间。",
+      "angle": "切入「适合女生的AI搞钱工具箱」，分享如何用AI辅助做自媒体内容、接商单、做电商，实现效率与变现的弯道超车。"
+    }
+  ],
+  "top_items": [
+    {
+      "title": "副业赚钱 的真实痛点与可执行方法",
+      "author": "seed-generator",
+      "likes": 0,
+      "url": "",
+      "source": "seed_fallback",
+      "source_platform": "internal",
+      "source_type": "seed_topic",
+      "search_keyword": "副业赚钱",
+      "seed_index": 3,
+      "score": 0.95,
+      "reason": "直击20-35岁女性搞钱与经济独立的刚需，变现属性极强，是小红书流量与互动的绝对收割机。",
+      "angle": "切入「女孩如何利用下班时间搞副业」，结合个人品牌打造，分享从0到1接单变现的保姆级实操与避坑指南。",
+      "index": 3
+    },
+    {
+      "title": "个人品牌 的真实痛点与可执行方法",
+      "author": "seed-generator",
+      "likes": 0,
+      "url": "",
+      "source": "seed_fallback",
+      "source_platform": "internal",
+      "source_type": "seed_topic",
+      "search_keyword": "个人品牌",
+      "seed_index": 1,
+      "score": 0.9,
+      "reason": "完美契合账号定位，且迎合了女性渴望摆脱职场内卷、打造超级个体的独立人设趋势。",
+      "angle": "主打「普通女孩如何通过放大优势打造个人IP」，提供朋友圈/小红书主页包装、人设定位与高价值变现的实操步骤。",
+      "index": 1
+    },
+    {
+      "title": "一人企业 的真实痛点与可执行方法",
+      "author": "seed-generator",
+      "likes": 0,
+      "url": "",
+      "source": "seed_fallback",
+      "source_platform": "internal",
+      "source_type": "seed_topic",
+      "search_keyword": "一人企业",
+      "seed_index": 2,
+      "score": 0.85,
+      "reason": "迎合女性追求自由职业、轻资产创业的趋势，是「个人品牌」实现商业闭环的高阶升华版。",
+      "angle": "聚焦「适合女生的轻资产一人公司」，分享如何挖掘自身技能点，跑通最小可行性闭环，实现只工作不上班的自由。",
+      "index": 2
+    },
+    {
+      "title": "女性成长 的真实痛点与可执行方法",
+      "author": "seed-generator",
+      "likes": 0,
+      "url": "",
+      "source": "seed_fallback",
+      "source_platform": "internal",
+      "source_type": "seed_topic",
+      "search_keyword": "女性成长",
+      "seed_index": 0,
+      "score": 0.8,
+      "reason": "受众匹配度极高，容易引发情绪共鸣，但需与具体的搞钱或技能结合才能避免沦为空洞的鸡汤。",
+      "angle": "从「认知觉醒与搞钱脑」切入，分享戒掉讨好型人格、提升配得感、建立高能量状态的具体行动清单。",
+      "index": 0
+    },
+    {
+      "title": "AI工具 的真实痛点与可执行方法",
+      "author": "seed-generator",
+      "likes": 0,
+      "url": "",
+      "source": "seed_fallback",
+      "source_platform": "internal",
+      "source_type": "seed_topic",
+      "search_keyword": "AI工具",
+      "seed_index": 4,
+      "score": 0.75,
+      "reason": "自带前沿科技与效率红利，将AI包装为女性搞钱与做个人IP的杠杆工具，极具爆款差异化空间。",
+      "angle": "切入「适合女生的AI搞钱工具箱」，分享如何用AI辅助做自媒体内容、接商单、做电商，实现效率与变现的弯道超车。",
+      "index": 4
+    }
+  ],
+  "decision": {
+    "fallback_seed_used": true,
+    "fallback_reason": "external_acquire_returned_empty",
+    "provider_trace": [
+      {
+        "provider": "public_feed",
+        "status": "empty",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0
+      },
+      {
+        "provider": "search:女性成长",
+        "status": "empty",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0
+      },
+      {
+        "provider": "search:个人品牌",
+        "status": "empty",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0
+      },
+      {
+        "provider": "search:一人企业",
+        "status": "empty",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0
+      },
+      {
+        "provider": "search:副业赚钱",
+        "status": "empty",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0
+      },
+      {
+        "provider": "search:AI工具",
+        "status": "empty",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0
+      },
+      {
+        "provider": "hosted_cross_platform",
+        "status": "empty",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0
+      },
+      {
+        "provider": "seed_fallback",
+        "status": "success",
+        "usable": true,
+        "count": 5,
+        "usable_count": 5
+      }
+    ],
+    "signal_summary": {
+      "count": 0,
+      "usable_count": 0,
+      "usable": false
+    },
+    "input_summary": {
+      "mode": "trending",
+      "keywords": [
+        "女性成长",
+        "个人品牌",
+        "一人企业",
+        "副业赚钱",
+        "AI工具"
+      ],
+      "domain": "女性成长与个人品牌",
+      "target_audience": "20-35岁追求成长与变现的女性",
+      "knowledge_sources": [
+        "dan_koe",
+        "alex_hormozi",
+        "james_clear",
+        "naval"
+      ]
+    },
+    "chosen_topics": [
+      {
+        "title": "副业赚钱 的真实痛点与可执行方法",
+        "score": 0.95,
+        "angle": "切入「女孩如何利用下班时间搞副业」，结合个人品牌打造，分享从0到1接单变现的保姆级实操与避坑指南。",
+        "reason": "直击20-35岁女性搞钱与经济独立的刚需，变现属性极强，是小红书流量与互动的绝对收割机。"
+      },
+      {
+        "title": "个人品牌 的真实痛点与可执行方法",
+        "score": 0.9,
+        "angle": "主打「普通女孩如何通过放大优势打造个人IP」，提供朋友圈/小红书主页包装、人设定位与高价值变现的实操步骤。",
+        "reason": "完美契合账号定位，且迎合了女性渴望摆脱职场内卷、打造超级个体的独立人设趋势。"
+      },
+      {
+        "title": "一人企业 的真实痛点与可执行方法",
+        "score": 0.85,
+        "angle": "聚焦「适合女生的轻资产一人公司」，分享如何挖掘自身技能点，跑通最小可行性闭环，实现只工作不上班的自由。",
+        "reason": "迎合女性追求自由职业、轻资产创业的趋势，是「个人品牌」实现商业闭环的高阶升华版。"
+      },
+      {
+        "title": "女性成长 的真实痛点与可执行方法",
+        "score": 0.8,
+        "angle": "从「认知觉醒与搞钱脑」切入，分享戒掉讨好型人格、提升配得感、建立高能量状态的具体行动清单。",
+        "reason": "受众匹配度极高，容易引发情绪共鸣，但需与具体的搞钱或技能结合才能避免沦为空洞的鸡汤。"
+      },
+      {
+        "title": "AI工具 的真实痛点与可执行方法",
+        "score": 0.75,
+        "angle": "切入「适合女生的AI搞钱工具箱」，分享如何用AI辅助做自媒体内容、接商单、做电商，实现效率与变现的弯道超车。",
+        "reason": "自带前沿科技与效率红利，将AI包装为女性搞钱与做个人IP的杠杆工具，极具爆款差异化空间。"
+      }
+    ]
+  }
+}

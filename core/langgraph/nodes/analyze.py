@@ -26,12 +26,26 @@ def analyze_node(state: PipelineState) -> dict:
     handler = handlers.get(scene, _analyze_passthrough)
     try:
         result = handler(raw_data, state.get("acquire_config", {}))
-        log.info(f"[M2] {scene}: analyzed {len(result.get('analyzed_items', []))} items, "
-                 f"top {len(result.get('top_items', []))}")
+        decision = state.get("decision", {})
+        if scene == "xiaohongshu":
+            decision = {
+                **decision,
+                "chosen_topics": [
+                    {
+                        "title": item.get("title", ""),
+                        "score": item.get("score", 0),
+                        "angle": item.get("angle", ""),
+                        "reason": item.get("reason", ""),
+                    }
+                    for item in result.get("top_items", [])
+                ],
+            }
+            result["decision"] = decision
+        log.info(f"[M2] {scene}: analyzed {len(result.get('analyzed_items', []))} items, top {len(result.get('top_items', []))}")
         return result
     except Exception as e:
         log.error(f"[M2] {scene} analyze failed: {e}")
-        return {"analyzed_items": raw_data, "top_items": raw_data[:5]}
+        return {"analyzed_items": raw_data, "top_items": raw_data[:5], "error": str(e)}
 
 
 def _analyze_xiaohongshu(raw_data: list[dict], config: dict) -> dict:
@@ -49,7 +63,6 @@ def _analyze_xiaohongshu(raw_data: list[dict], config: dict) -> dict:
             "likes": item.get("likes", item.get("heat", "0")),
             "author": item.get("author", ""),
         }
-        # Include source info for cross-platform awareness
         if item.get("source_platform"):
             entry["source_platform"] = item["source_platform"]
         if item.get("source_type") or item.get("source"):
@@ -100,7 +113,6 @@ def _analyze_xiaohongshu(raw_data: list[dict], config: dict) -> dict:
 
 
 def _analyze_signal(raw_data: list[dict], config: dict) -> dict:
-    # TODO: 接入朋友的策略模块
     return {"analyzed_items": raw_data, "top_items": raw_data}
 
 

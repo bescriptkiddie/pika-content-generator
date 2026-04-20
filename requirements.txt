@@ -2,7 +2,7 @@
 langgraph>=0.3.0
 langchain-core>=0.3.0
 requests>=2.31.0
-requests>=2.31.0
+playwright>=1.52.0
 
 # API Server
 fastapi>=0.115.0
@@ -12,9 +12,10 @@ pydantic>=2.0
 # Config
 pyyaml>=6.0
 
-# Financial Data (install as needed)
+# Optional providers
 # akshare>=1.18.0
 # ccxt>=4.0.0
+# xhs-cli 通过标准安装或 XHS_CLI_MODULE_PATH 接入
 
 # Database (for checkpointing)
 # psycopg2-binary>=2.9.0

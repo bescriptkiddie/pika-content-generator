@@ -1,134 +1,251 @@
-# PikaEngine — 多场景 AI 内容引擎
+# PikaEngine
 
-> 基于 GEOFlow 底座，构建跨场景的 AI 内容生产与执行系统。
+面向多场景内容与信号流水线的 Harness。当前重点场景是小红书：采集、分析、生成、执行、反馈全链路可运行，同时把 provider 失败收敛为结构化状态。
 
-## 架构概览
+## 当前小红书链路
 
-```
-┌───────────────────────────────────────────────────────┐
-│                    PikaEngine                          │
-│                                                        │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐            │
-│  │ M1:采集  │→│ M2:分析  │→│ M3:生成  │            │
-│  │ Acquire  │  │ Analyze  │  │ Generate │            │
-│  └──────────┘  └──────────┘  └──────────┘            │
-│                                    ↓                   │
-│               ┌──────────┐  ┌──────────┐  ┌────────┐ │
-│               │ M5:反馈  │←│ M4:执行  │←│M3.5:风控│ │
-│               │ Feedback │  │ Execute  │  │RiskGate│ │
-│               └──────────┘  └──────────┘  └────────┘ │
-└───────────────────────────────────────────────────────┘
-```
+- `core/langgraph/tools/signal_gateway.py`：按 provider 顺序拉取信源，产出 `provider_trace / signal_summary / failure_state / action_required / degraded`
+- `core/langgraph/tools/web_access.py`：浏览器访问层，默认 `playwright_persistent`，兼容旧 `cdp_http`
+- `core/langgraph/tools/xhs_cli_provider.py`：接入 `xhs-cli`，保留 `verification_required / verify_type / verify_uuid`
+- `core/langgraph/nodes/acquire.py`：采集阶段，信源为空时退回 seed topic
+- `core/langgraph/nodes/execute.py`：执行阶段，浏览器不可用时落本地草稿
 
-## 四个业务场景
+## 环境要求
 
-| 场景 | M1 数据源 | M3 输出 | M4 执行 |
-|------|----------|---------|---------|
-| **小红书** | 热点/竞品笔记 | 小红书图文 | 发布到小红书 |
-| **盖洛普Agent** | 教练社群/行业动态 | 分析报告/对话 | 交付给教练 |
-| **GEO** | 搜索引擎AI回答 | SEO/GEO文章 | 发布到站点(GEOFlow) |
-| **量化(A股+B圈)** | 行情/链上/舆情 | 交易信号 | 下单/调仓 |
+- Python 3.11+
+- Chromium 或 Chrome
+- 可选：`bb-browser`
+- 可选：`xhs-cli`
 
-## 技术栈
+## 安装
 
-### 编排层
-- **n8n** — 定时调度（Cron/Webhook）
-- **LangGraph** — 智能编排（状态管理、条件分支、断点续跑、人工审批）
-
-### 工具层
-- **bb-browser** — 103条平台命令，快速查询公开数据
-- **web-access** — CDP控制真实Chrome，复用登录态，绕过反爬
-- **Crawl4AI** — 自托管LLM-ready批量爬虫
-- **AKShare + Tushare** — A股数据
-- **CCXT** — 100+加密货币交易所统一API
-
-### 核心层（来自 GEOFlow）
-- **AI Engine** — 多模型调用、提示词变量、知识库RAG
-- **Scheduler** — Cron + Worker 调度
-- **Queue** — Job claim/complete/fail/retry
-- **Knowledge** — Embedding 检索
-- **Prompt Engine** — 模板变量系统
-
-## 项目结构
-
-```
-PikaEngine/
-├── core/                      # 核心层
-│   ├── ai-engine/             # AI调用引擎（从GEOFlow抽象）
-│   ├── langgraph/             # LangGraph 编排引擎
-│   │   ├── state.py           # PipelineState 状态定义
-│   │   ├── graph.py           # StateGraph 组装
-│   │   ├── nodes/             # M1-M5 各节点实现
-│   │   └── tools/             # 工具封装（bb-browser/web-access/AKShare/CCXT）
-│   ├── scheduler/             # 任务调度器
-│   ├── queue/                 # 队列服务
-│   ├── knowledge/             # 知识库 & RAG
-│   └── prompt-engine/         # 提示词模板系统
-│
-├── modules/                   # 业务模块层
-│   ├── m1-acquire/            # M1: 数据采集
-│   │   ├── xiaohongshu/       # 小红书热点采集
-│   │   ├── quant-a-stock/     # A股行情数据
-│   │   ├── quant-crypto/      # 加密货币数据
-│   │   ├── gallup/            # 盖洛普社群数据
-│   │   └── geo/               # 搜索引擎GEO数据
-│   │
-│   ├── m2-analyze/            # M2: 数据分析
-│   │   ├── trending/          # 热点匹配度打分
-│   │   ├── signal/            # 量化信号计算
-│   │   ├── gallup-report/     # Gallup报告解读
-│   │   └── keyword-gap/       # GEO关键词gap分析
-│   │
-│   ├── m3-generate/           # M3: 内容生成
-│   │   ├── templates/         # 各场景提示词模板
-│   │   └── adapters/          # 输出格式适配器
-│   │
-│   ├── m3-5-risk-gate/        # M3.5: 风控网关（量化专用）
-│   │
-│   ├── m4-execute/            # M4: 执行/分发
-│   │   ├── xiaohongshu/       # 小红书发布
-│   │   ├── geo-site/          # GEO站点发布（GEOFlow原生）
-│   │   ├── gallup-deliver/    # 盖洛普报告交付
-│   │   └── trading/           # 交易执行
-│   │
-│   └── m5-feedback/           # M5: 效果反馈
-│       ├── metrics/           # 指标定义
-│       └── collectors/        # 数据收集器
-│
-├── config/                    # 配置文件
-├── docs/                      # 文档
-├── scripts/                   # 运维脚本
-└── tests/                     # 测试
+```bash
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+playwright install chromium
 ```
 
-## 实施路径
+`xhs-cli` 有两种接入方式，二选一：
 
-| Phase | 目标 | 状态 |
-|-------|------|------|
-| P1 | 小红书：M1采集 + M3生成 + M4发布 | 进行中 |
-| P1.5 | 量化：M1数据 + M2信号 + M3.5风控 | 同步推进 |
-| P2 | 盖洛普Agent：复用M1/M3 + Gallup解析 | 每周固定 |
-| P3 | GEO：复用M1/M3 + GEO分发 | 观察仓位 |
+```bash
+python -m pip install -e /path/to/xhs-cli
+```
 
-## 底座依赖
+或在 `.env` 里设置：
 
-- [GEOFlow](https://github.com/yaojingang/GEOFlow) — PHP, PostgreSQL, Docker（AI引擎、队列、内容工作流）
-- [LangGraph](https://github.com/langchain-ai/langgraph) — Python, MIT（状态编排、断点续跑）
-- [n8n](https://n8n.io/) — Node.js, Docker（定时调度）
-- [bb-browser](https://github.com/nicepkg/bb-browser) — 103条平台CLI命令
-- [web-access](https://github.com/nicepkg/web-access) — CDP浏览器自动化
+```bash
+XHS_CLI_MODULE_PATH=/absolute/path/to/xhs-cli
+```
 
-## 设计原则
+如果要启用公开数据 provider，再安装：
 
-1. **配置驱动** — M1的数据源、M3的输出模板、M4的发布目标都是配置项
-2. **模块独立** — 每个模块可独立开发、测试、部署
-3. **场景无关** — 核心层不绑定任何业务场景
-4. **风控前置** — 涉及资金的M4必须经过M3.5风控网关
-5. **三层采集** — 公开数据(bb-browser) → 登录态(web-access) → 批量(Crawl4AI)
-6. **人机协同** — LangGraph 支持人工审批节点，量化交易不自动执行
+```bash
+npm install -g bb-browser
+```
 
-## 文档索引
+## 环境变量
 
-- [M1 采集工具选型](docs/m1-acquire-toolchain.md) — 各场景采集工具对比
-- [LangGraph 集成方案](docs/langgraph-integration.md) — 编排层详细设计
-- [GEOFlow 复用清单](docs/geoflow-reuse-map.md) — 底座复用映射
+复制示例配置：
+
+```bash
+cp .env.example .env
+```
+
+关键变量：
+
+```bash
+XHS_BROWSER_BACKEND=playwright_persistent
+XHS_PLAYWRIGHT_USER_DATA_DIR=~/.pikaengine/playwright/xiaohongshu
+XHS_PLAYWRIGHT_HEADLESS=false
+XHS_PLAYWRIGHT_CHANNEL=chrome
+XHS_BROWSER_STARTUP_TIMEOUT=30000
+XHS_BROWSER_ACTION_TIMEOUT=15000
+XHS_BROWSER_NAVIGATION_TIMEOUT=30000
+DAILYHOT_API_BASE=http://localhost:6688
+XHS_CLI_MODULE_PATH=
+```
+
+## Scene 配置
+
+跨机运行时主要看 `config/scenes.example.yaml` 里的这些字段：
+
+- `provider_order`
+- `browser_backend`
+- `user_data_dir`
+- `playwright_channel`
+- `headless`
+- `startup_timeout_ms`
+- `action_timeout_ms`
+- `navigation_timeout_ms`
+- `dailyhot_api_base`
+
+小红书默认 provider 顺序：
+
+1. `xhs_cli_search` / `xhs_cli_feed`
+2. `bb_search` / `bb_feed`
+3. `browser_search` / `browser_feed`
+4. `hosted_cross_platform`
+
+## 首次登录 Playwright 持久化 profile
+
+首次登录需要把浏览器 profile 建起来并保留登录态：
+
+```bash
+python - <<'PY'
+from core.langgraph.tools.web_access import browser_open_tab
+
+config = {
+    "browser_backend": "playwright_persistent",
+    "user_data_dir": "~/.pikaengine/playwright/xiaohongshu",
+    "playwright_channel": "chrome",
+    "headless": False,
+}
+
+target = browser_open_tab(
+    "https://www.xiaohongshu.com/explore",
+    wait_seconds=600,
+    config=config,
+)
+print("target:", target)
+input("完成登录后按回车结束...")
+PY
+```
+
+登录完成后，cookie 会保存在 `XHS_PLAYWRIGHT_USER_DATA_DIR` 指向的目录里。后续 `browser_status()` 会直接复用这个 profile。
+
+## Provider 检查
+
+```bash
+python - <<'PY'
+from core.langgraph.tools.bb_browser import bb_browser_provider_status
+from core.langgraph.tools.web_access import browser_status
+from core.langgraph.tools.xhs_cli_provider import xhs_cli_status
+
+config = {
+    "browser_backend": "playwright_persistent",
+    "user_data_dir": "~/.pikaengine/playwright/xiaohongshu",
+    "playwright_channel": "chrome",
+    "headless": False,
+}
+
+print("browser:", browser_status(config))
+print("xhs-cli:", xhs_cli_status())
+print("bb-browser:", bb_browser_provider_status("xiaohongshu/search AI工具"))
+PY
+```
+
+期望状态：
+
+- browser provider：`success`
+- xhs-cli：`success` 或明确的 `auth_expired / verification_required`
+- bb-browser：`success` 或明确的 `unavailable / timeout / error`
+
+## 运行
+
+### 另一台电脑上的最短 dry-run
+
+```bash
+python run.py --scene xiaohongshu_trending --config config/scenes.example.yaml --dry-run -v
+```
+
+### 主场景执行
+
+```bash
+python run.py --scene xiaohongshu --config config/scenes.example.yaml -v
+```
+
+### 指定 run_id
+
+```bash
+python run.py --scene xiaohongshu_trending --run-id demo-xhs-001 --dry-run
+```
+
+## 运行产物
+
+每次执行会在 `data/runs/<run_id>/` 下生成：
+
+- `run.json`
+- `events.jsonl`
+- `artifacts/acquire.json`
+- `artifacts/feedback.json`
+
+排查时优先看：
+
+- `run.json.status`
+- `run.json.action_required`
+- `artifacts/feedback.json.failure_state`
+- `artifacts/feedback.json.provider_trace`
+
+## 常见状态与动作
+
+### `unavailable`
+
+表示 provider 没装好、浏览器没起来，或配置不可用。
+
+- browser provider：检查 `playwright` 安装、`playwright install chromium`、profile 路径、浏览器锁文件
+- xhs-cli：安装依赖或配置 `XHS_CLI_MODULE_PATH`
+- bb-browser：安装全局命令并确认可执行
+
+### `auth_expired`
+
+表示登录态失效。
+
+- browser provider：用持久化 profile 手动重新登录小红书
+- xhs-cli：重新执行 `xhs login`
+
+### `verification_required`
+
+表示小红书平台要求额外验证。当前 `xhs-cli` 会把 `verify_type` 和 `verify_uuid` 写进状态。
+
+- 按平台提示完成验证
+- 重新执行 `xhs login --qrcode`
+- 再次运行场景
+
+### `timeout`
+
+表示 provider 超时。
+
+- 稍后重试
+- 减少 `max_notes` / `max_per_keyword`
+- 提高 `startup_timeout_ms` 或 `navigation_timeout_ms`
+
+### `degraded=true`
+
+表示链路可继续跑，但使用了降级策略，例如：
+
+- 某些 provider 失败后切换到后续 provider
+- 外部信源全部为空后退回 seed topic
+- 浏览器发布失败后改存本地草稿
+
+## 面试演示路径
+
+推荐顺序：
+
+1. 先跑 `xiaohongshu_trending --dry-run`
+2. 展示 `provider_trace`、`failure_state`、`action_required`
+3. 展示生成内容和 `data/runs/<run_id>/artifacts/`
+4. 再跑 `xiaohongshu` 主场景，展示草稿或发布动作
+5. 如遇失败，直接解释是哪一个 provider 失败、系统给了什么动作
+
+演示时重点看这几个文件：
+
+- `data/runs/<run_id>/run.json`
+- `data/runs/<run_id>/events.jsonl`
+- `data/runs/<run_id>/artifacts/acquire.json`
+- `data/runs/<run_id>/artifacts/feedback.json`
+
+## 测试
+
+```bash
+python -m pytest tests/test_xhs_cli_provider.py tests/test_browser_providers.py tests/integration/test_xiaohongshu_harness.py
+```
+
+## 代码定位
+
+- 浏览器后端选择：`core/langgraph/tools/web_access.py`
+- 小红书 provider 聚合：`core/langgraph/tools/signal_gateway.py`
+- 小红书浏览器采集：`core/langgraph/tools/xiaohongshu.py`
+- 小红书执行节点：`core/langgraph/nodes/execute.py`
+- 运行器：`core/runtime/graph_runner.py`

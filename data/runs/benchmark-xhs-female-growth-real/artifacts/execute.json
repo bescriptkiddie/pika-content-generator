@@ -1,0 +1,59 @@
+{
+  "execution_results": [
+    {
+      "status": "local_draft",
+      "title": "普通女孩如何停止内耗？坚持这4件小事就够了！✨",
+      "file": "/Users/pika/ai-pika/01_项目/pika-content-generator/core/langgraph/nodes/../../../data/drafts/xhs_20260420_085838_0.json",
+      "platform": "xiaohongshu",
+      "fallback": true
+    }
+  ],
+  "decision": {
+    "fallback_seed_used": true,
+    "fallback_reason": "external_acquire_returned_empty",
+    "input_summary": {
+      "mode": "search",
+      "keywords": [
+        "女性成长"
+      ],
+      "domain": "女性成长",
+      "target_audience": "20-35岁关注成长的女性",
+      "knowledge_sources": [
+        "dan_koe",
+        "james_clear",
+        "naval"
+      ]
+    },
+    "chosen_topics": [
+      {
+        "title": "女性成长 的真实痛点与可执行方法",
+        "score": 0.9,
+        "angle": "以「反焦虑/反内耗」为情绪切入点，分享3-5个低成本、易坚持的微习惯（如极简护肤、搞钱存钱、情绪日记），标题采用「普通女孩如何...」句式拉近距离。",
+        "reason": "直击20-35岁女性摆脱精神内耗与迷茫的核心痛点，'可执行方法'完美契合小红书用户偏爱干货收藏的爆款逻辑。"
+      }
+    ],
+    "draft_assets": [
+      {
+        "title": "普通女孩如何停止内耗？坚持这4件小事就够了！✨",
+        "source_topic": "女性成长 的真实痛点与可执行方法",
+        "source_angle": "以「反焦虑/反内耗」为情绪切入点，分享3-5个低成本、易坚持的微习惯（如极简护肤、搞钱存钱、情绪日记），标题采用「普通女孩如何...」句式拉近距离。",
+        "tags": [
+          "#女性成长",
+          "#拒绝内耗",
+          "#普通女孩",
+          "#微习惯",
+          "#女孩搞钱",
+          "#自我提升",
+          "#治愈自己",
+          "#女生必看"
+        ]
+      }
+    ],
+    "execution_plan": {
+      "mode": "human_review_then_publish",
+      "channel": "xiaohongshu",
+      "draft_count": 1,
+      "published_count": 0
+    }
+  }
+}

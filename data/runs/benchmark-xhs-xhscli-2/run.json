@@ -1,0 +1,381 @@
+{
+  "scene": "xiaohongshu_trending",
+  "base_scene": "xiaohongshu",
+  "trigger": "cli",
+  "thread_id": "benchmark-xhs-xhscli-2",
+  "status": "action_required",
+  "run_plan": {
+    "scene": "xiaohongshu_trending",
+    "base_scene": "xiaohongshu",
+    "name": "小红书-全站热度感知",
+    "config_path": "/Users/pika/ai-pika/01_项目/pika-content-generator/config/scenes.example.yaml",
+    "stages": [
+      "acquire",
+      "analyze",
+      "generate",
+      "execute",
+      "feedback"
+    ],
+    "stage_configs": {
+      "acquire": {
+        "binding": "xiaohongshu.acquire",
+        "config": {
+          "mode": "trending",
+          "keywords": [
+            "女性成长",
+            "个人品牌",
+            "一人企业",
+            "副业赚钱",
+            "AI工具"
+          ],
+          "max_per_keyword": 5,
+          "cross_platforms": [
+            "zhihu",
+            "toutiao",
+            "douyin",
+            "bilibili",
+            "36kr"
+          ],
+          "save_daily_snapshot": true,
+          "domain": "女性成长与个人品牌",
+          "target_audience": "20-35岁追求成长与变现的女性",
+          "knowledge_sources": [
+            "dan_koe",
+            "alex_hormozi",
+            "james_clear",
+            "naval"
+          ],
+          "brand_voice": "温暖有力量、真诚分享、像闺蜜聊天一样",
+          "top_n": 5
+        },
+        "type": "xiaohongshu",
+        "model": "",
+        "knowledge_sources": []
+      },
+      "analyze": {
+        "binding": "xiaohongshu.analyze",
+        "config": {},
+        "type": "",
+        "model": "",
+        "knowledge_sources": []
+      },
+      "generate": {
+        "binding": "xiaohongshu.generate",
+        "config": {},
+        "type": "",
+        "model": "",
+        "knowledge_sources": []
+      },
+      "risk_gate": {
+        "binding": "xiaohongshu.risk_gate",
+        "config": {},
+        "type": "",
+        "model": "",
+        "knowledge_sources": []
+      },
+      "execute": {
+        "binding": "xiaohongshu.execute",
+        "config": {
+          "auto_publish": false
+        },
+        "type": "",
+        "model": "",
+        "knowledge_sources": []
+      },
+      "feedback": {
+        "binding": "xiaohongshu.feedback",
+        "config": {},
+        "type": "",
+        "model": "",
+        "knowledge_sources": []
+      }
+    },
+    "bindings": {
+      "acquire": "xiaohongshu.acquire",
+      "analyze": "xiaohongshu.analyze",
+      "generate": "xiaohongshu.generate",
+      "execute": "xiaohongshu.execute",
+      "feedback": "xiaohongshu.feedback"
+    },
+    "policy": {
+      "scene_name": "xiaohongshu_trending",
+      "base_scene": "xiaohongshu",
+      "enabled_stages": [
+        "acquire",
+        "analyze",
+        "generate",
+        "execute",
+        "feedback"
+      ],
+      "requires_human_review": false,
+      "auto_publish": false,
+      "checkpoint": true,
+      "max_retries": 2,
+      "artifact_policy": "stage_outputs",
+      "dry_run": true
+    },
+    "overrides": {
+      "stage_configs": {}
+    }
+  },
+  "started_at": "2026-04-20T15:33:29.727176",
+  "run_id": "benchmark-xhs-xhscli-2",
+  "finished_at": "2026-04-20T15:38:37.961435",
+  "feedback": {
+    "scene": "xiaohongshu",
+    "scene_name": "xiaohongshu_trending",
+    "total_executed": 5,
+    "success_count": 5,
+    "raw_items": 5,
+    "top_items": 5,
+    "generated_count": 5,
+    "draft_count": 5,
+    "published_count": 0,
+    "fallback_rate": 1.0,
+    "error_count": 0,
+    "run_status": "pass",
+    "provider_trace": [
+      {
+        "provider": "xhs-cli:feed",
+        "status": "auth_expired",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": false,
+        "action_required": "reauth",
+        "action_hint": "运行 xhs login 重新登录小红书",
+        "reason": "xhs-cli has no valid cookie session"
+      },
+      {
+        "provider": "bb-browser:feed",
+        "status": "empty",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": true,
+        "action_required": "none",
+        "action_hint": "",
+        "reason": "provider returned empty result"
+      },
+      {
+        "provider": "xhs-cli:search:女性成长",
+        "status": "auth_expired",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": false,
+        "action_required": "reauth",
+        "action_hint": "运行 xhs login 重新登录小红书",
+        "reason": "xhs-cli has no valid cookie session"
+      },
+      {
+        "provider": "bb-browser:search:女性成长",
+        "status": "error",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": true,
+        "action_required": "retry_later",
+        "action_hint": "检查 bb-browser 命令与目标站点状态",
+        "reason": "错误：bb-browser: Daemon did not start in time.\n\nChrome CDP is reachable, but the daemon process failed to initialize.\nTry: bb-browser daemon status"
+      },
+      {
+        "provider": "cdp:search:女性成长",
+        "status": "unavailable",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": true,
+        "action_required": "start_provider",
+        "action_hint": "启动本地 CDP / 浏览器代理服务",
+        "reason": "web-access CDP proxy not running"
+      },
+      {
+        "provider": "xhs-cli:search:个人品牌",
+        "status": "auth_expired",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": false,
+        "action_required": "reauth",
+        "action_hint": "运行 xhs login 重新登录小红书",
+        "reason": "xhs-cli has no valid cookie session"
+      },
+      {
+        "provider": "bb-browser:search:个人品牌",
+        "status": "error",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": true,
+        "action_required": "retry_later",
+        "action_hint": "检查 bb-browser 命令与目标站点状态",
+        "reason": "错误：bb-browser: Daemon did not start in time.\n\nChrome CDP is reachable, but the daemon process failed to initialize.\nTry: bb-browser daemon status"
+      },
+      {
+        "provider": "cdp:search:个人品牌",
+        "status": "unavailable",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": true,
+        "action_required": "start_provider",
+        "action_hint": "启动本地 CDP / 浏览器代理服务",
+        "reason": "web-access CDP proxy not running"
+      },
+      {
+        "provider": "xhs-cli:search:一人企业",
+        "status": "auth_expired",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": false,
+        "action_required": "reauth",
+        "action_hint": "运行 xhs login 重新登录小红书",
+        "reason": "xhs-cli has no valid cookie session"
+      },
+      {
+        "provider": "bb-browser:search:一人企业",
+        "status": "error",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": true,
+        "action_required": "retry_later",
+        "action_hint": "检查 bb-browser 命令与目标站点状态",
+        "reason": "错误：bb-browser: Daemon did not start in time.\n\nChrome CDP is reachable, but the daemon process failed to initialize.\nTry: bb-browser daemon status"
+      },
+      {
+        "provider": "cdp:search:一人企业",
+        "status": "unavailable",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": true,
+        "action_required": "start_provider",
+        "action_hint": "启动本地 CDP / 浏览器代理服务",
+        "reason": "web-access CDP proxy not running"
+      },
+      {
+        "provider": "xhs-cli:search:副业赚钱",
+        "status": "auth_expired",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": false,
+        "action_required": "reauth",
+        "action_hint": "运行 xhs login 重新登录小红书",
+        "reason": "xhs-cli has no valid cookie session"
+      },
+      {
+        "provider": "bb-browser:search:副业赚钱",
+        "status": "error",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": true,
+        "action_required": "retry_later",
+        "action_hint": "检查 bb-browser 命令与目标站点状态",
+        "reason": "错误：bb-browser: Daemon did not start in time.\n\nChrome CDP is reachable, but the daemon process failed to initialize.\nTry: bb-browser daemon status"
+      },
+      {
+        "provider": "cdp:search:副业赚钱",
+        "status": "unavailable",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": true,
+        "action_required": "start_provider",
+        "action_hint": "启动本地 CDP / 浏览器代理服务",
+        "reason": "web-access CDP proxy not running"
+      },
+      {
+        "provider": "xhs-cli:search:AI工具",
+        "status": "auth_expired",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": false,
+        "action_required": "reauth",
+        "action_hint": "运行 xhs login 重新登录小红书",
+        "reason": "xhs-cli has no valid cookie session"
+      },
+      {
+        "provider": "bb-browser:search:AI工具",
+        "status": "error",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": true,
+        "action_required": "retry_later",
+        "action_hint": "检查 bb-browser 命令与目标站点状态",
+        "reason": "错误：bb-browser: Daemon did not start in time.\n\nChrome CDP is reachable, but the daemon process failed to initialize.\nTry: bb-browser daemon status"
+      },
+      {
+        "provider": "cdp:search:AI工具",
+        "status": "unavailable",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": true,
+        "action_required": "start_provider",
+        "action_hint": "启动本地 CDP / 浏览器代理服务",
+        "reason": "web-access CDP proxy not running"
+      },
+      {
+        "provider": "hosted:cross_platform",
+        "status": "empty",
+        "usable": false,
+        "count": 0,
+        "usable_count": 0,
+        "retryable": true,
+        "action_required": "retry_later",
+        "action_hint": "",
+        "reason": "provider returned empty result"
+      },
+      {
+        "provider": "seed_fallback",
+        "status": "success",
+        "usable": true,
+        "count": 5,
+        "usable_count": 5,
+        "retryable": false,
+        "action_required": "none",
+        "action_hint": "",
+        "reason": "fallback topic seeds generated"
+      }
+    ],
+    "signal_summary": {
+      "count": 0,
+      "usable_count": 0,
+      "usable": false
+    },
+    "fallback_seed_used": true,
+    "failure_state": {
+      "kind": "auth_expired",
+      "stage": "acquire",
+      "provider": "xhs-cli:feed",
+      "reason": "xhs-cli has no valid cookie session",
+      "retryable": false,
+      "action_required": "reauth",
+      "action_hint": "运行 xhs login 重新登录小红书"
+    },
+    "action_required": "reauth",
+    "degraded": true,
+    "provider_success_count": 1,
+    "provider_failure_count": 16,
+    "provider_empty_count": 2
+  },
+  "error": null,
+  "failure_state": {
+    "kind": "auth_expired",
+    "stage": "acquire",
+    "provider": "xhs-cli:feed",
+    "reason": "xhs-cli has no valid cookie session",
+    "retryable": false,
+    "action_required": "reauth",
+    "action_hint": "运行 xhs login 重新登录小红书"
+  },
+  "action_required": "reauth",
+  "degraded": true
+}

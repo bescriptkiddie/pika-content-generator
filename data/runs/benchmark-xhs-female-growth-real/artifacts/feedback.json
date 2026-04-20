@@ -1,0 +1,26 @@
+{
+  "feedback_data": {
+    "scene": "xiaohongshu",
+    "scene_name": "xiaohongshu_trending",
+    "total_executed": 1,
+    "success_count": 1,
+    "raw_items": 1,
+    "top_items": 1,
+    "generated_count": 1,
+    "draft_count": 1,
+    "published_count": 0,
+    "fallback_rate": 1.0,
+    "error_count": 0,
+    "run_status": "pass"
+  },
+  "benchmark": {
+    "raw_items": 1,
+    "top_items": 1,
+    "generated_count": 1,
+    "draft_count": 1,
+    "published_count": 0,
+    "fallback_rate": 1.0,
+    "error_count": 0,
+    "run_status": "pass"
+  }
+}

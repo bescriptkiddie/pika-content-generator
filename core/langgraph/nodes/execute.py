@@ -27,25 +27,38 @@ def execute_node(state: PipelineState) -> dict:
     handler = handlers.get(scene, _execute_noop)
     try:
         results = handler(content, state)
+        decision = state.get("decision", {})
+        if scene == "xiaohongshu":
+            decision = {
+                **decision,
+                "execution_plan": {
+                    "mode": "human_review_then_publish" if not state.get("acquire_config", {}).get("auto_publish", False) else "auto_publish",
+                    "channel": "xiaohongshu",
+                    "draft_count": sum(1 for item in results if item.get("status") in {"draft_in_editor", "local_draft"}),
+                    "published_count": sum(1 for item in results if item.get("status") == "published"),
+                },
+            }
         log.info(f"[M4] {scene}: executed {len(results)} items")
-        return {"execution_results": results}
+        return {"execution_results": results, "decision": decision}
     except Exception as e:
         log.error(f"[M4] {scene} execute failed: {e}")
-        return {"execution_results": [{"status": "failed", "error": str(e)}]}
+        return {"execution_results": [{"status": "failed", "error": str(e)}], "error": str(e)}
 
 
 def _execute_xiaohongshu(content: list[dict], state: PipelineState) -> list[dict]:
     from ..tools.web_access import (
-        cdp_available, cdp_open_tab, cdp_eval,
-        cdp_click, cdp_close_tab, cdp_scroll,
+        browser_available,
+        browser_open_tab,
+        browser_eval,
+        browser_click,
+        browser_close_tab,
     )
 
     config = state.get("acquire_config", {})
     auto_publish = config.get("auto_publish", False)
     results = []
 
-    if not cdp_available():
-        # CDP 不可用，保存到本地文件作为草稿
+    if not browser_available(config):
         return _save_drafts_locally(content)
 
     creator_url = "https://creator.xiaohongshu.com/publish/publish"
@@ -58,50 +71,44 @@ def _execute_xiaohongshu(content: list[dict], state: PipelineState) -> list[dict
         body = item.get("body", "")
         tags = item.get("tags", [])
         hook = item.get("hook", "")
-
-        # 组装完整正文
         full_body = body
         if hook:
             full_body += f"\n\n{hook}"
         if tags:
             full_body += "\n\n" + " ".join(tags)
 
-        target_id = cdp_open_tab(creator_url, wait_seconds=3.0)
+        target_id = browser_open_tab(creator_url, wait_seconds=3.0, config=config)
         if not target_id:
             results.append({"status": "failed", "title": title, "error": "无法打开创作者中心"})
             continue
 
         try:
-            # 填写标题
-            cdp_eval(target_id, f"""
+            browser_eval(target_id, f"""
                 const titleInput = document.querySelector('#post-title, [placeholder*="标题"], input[class*="title"]');
                 if (titleInput) {{
                     titleInput.focus();
                     titleInput.value = {json.dumps(title)};
                     titleInput.dispatchEvent(new Event('input', {{bubbles: true}}));
                 }}
-            """)
+            """, config=config)
             time.sleep(0.5)
 
-            # 填写正文
-            cdp_eval(target_id, f"""
+            browser_eval(target_id, f"""
                 const editor = document.querySelector('.ql-editor, [contenteditable="true"], .ProseMirror');
                 if (editor) {{
                     editor.focus();
                     editor.innerHTML = {json.dumps(full_body.replace(chr(10), '<br>'))};
                     editor.dispatchEvent(new Event('input', {{bubbles: true}}));
                 }}
-            """)
+            """, config=config)
             time.sleep(0.5)
 
             if auto_publish:
-                # 点击发布按钮
-                cdp_click(target_id, 'button[class*="publish"], button[class*="submit"]')
+                browser_click(target_id, 'button[class*="publish"], button[class*="submit"]', config=config)
                 time.sleep(2.0)
                 results.append({"status": "published", "title": title, "platform": "xiaohongshu"})
                 log.info(f"[M4] published: {title[:40]}")
             else:
-                # 仅创建草稿，不点发布
                 results.append({"status": "draft_in_editor", "title": title, "platform": "xiaohongshu"})
                 log.info(f"[M4] draft ready: {title[:40]}")
 
@@ -110,14 +117,12 @@ def _execute_xiaohongshu(content: list[dict], state: PipelineState) -> list[dict
             log.error(f"[M4] publish failed for '{title[:30]}': {e}")
         finally:
             if auto_publish:
-                cdp_close_tab(target_id)
-            # 不自动发布时保留标签页，让用户手动确认
+                browser_close_tab(target_id, config=config)
 
     return results
 
 
 def _save_drafts_locally(content: list[dict]) -> list[dict]:
-    """CDP 不可用时，保存草稿到本地 JSON 文件"""
     import os
     from datetime import datetime
 
@@ -149,6 +154,8 @@ def _save_drafts_locally(content: list[dict]) -> list[dict]:
             "status": "local_draft",
             "title": item.get("title", ""),
             "file": filepath,
+            "platform": "xiaohongshu",
+            "fallback": True,
         })
         log.info(f"[M4] saved local draft: {filepath}")
 
@@ -156,7 +163,6 @@ def _save_drafts_locally(content: list[dict]) -> list[dict]:
 
 
 def _execute_gallup(content: list[dict], state: PipelineState) -> list[dict]:
-    # TODO: 交付给教练（API/邮件/消息）
     return [{"status": "delivered", "platform": "gallup"}]
 
 
@@ -181,7 +187,6 @@ def _execute_geo(content: list[dict], state: PipelineState) -> list[dict]:
 
 
 def _execute_trade(content: list[dict], state: PipelineState) -> list[dict]:
-    # 默认仅记录信号，不自动执行
     results = []
     for signal in content:
         results.append({
