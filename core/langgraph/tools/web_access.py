@@ -15,6 +15,7 @@ import requests
 log = logging.getLogger(__name__)
 
 PLAYWRIGHT_DEFAULT_PROFILE = str(Path.home() / ".pikaengine" / "playwright" / "xiaohongshu")
+XHS_WEB_ACCESS_PROBE_URL = "https://creator.xiaohongshu.com/publish/publish"
 
 _PLAYWRIGHT_RUNTIME: dict[str, Any] = {
     "playwright": None,
@@ -441,7 +442,12 @@ def _playwright_close_tab(target_id: str) -> None:
 
 
 def _cdp_base(config: dict[str, Any] | None = None) -> str:
-    return _config_str(config, "cdp_base", "CDP_BASE", "http://localhost:3456")
+    return _config_str(
+        config,
+        "cdp_base",
+        "XHS_WEB_ACCESS_BASE",
+        os.getenv("CDP_BASE", "http://localhost:3456").strip() or "http://localhost:3456",
+    )
 
 
 def _cdp_timeout(config: dict[str, Any] | None = None) -> int:
@@ -457,21 +463,88 @@ def _legacy_cdp_available(config: dict[str, Any] | None = None) -> bool:
 
 
 def _legacy_cdp_status(config: dict[str, Any] | None = None) -> dict[str, Any]:
-    if _legacy_cdp_available(config):
+    try:
+        resp = requests.get(f"{_cdp_base(config)}/targets", timeout=3)
+    except requests.Timeout:
         return {
-            "status": "success",
-            "reason": "",
-            "retryable": False,
-            "action_required": "none",
-            "action_hint": "",
+            "status": "timeout",
+            "reason": "web-access CDP proxy request timeout",
+            "retryable": True,
+            "action_required": "retry_later",
+            "action_hint": "稍后重试本地 CDP / 浏览器代理服务",
         }
-    return {
-        "status": "unavailable",
-        "reason": "web-access CDP proxy not running",
-        "retryable": True,
-        "action_required": "start_provider",
-        "action_hint": "启动本地 CDP / 浏览器代理服务",
-    }
+    except Exception:
+        return {
+            "status": "unavailable",
+            "reason": "web-access CDP proxy not running",
+            "retryable": True,
+            "action_required": "start_provider",
+            "action_hint": "启动本地 CDP / 浏览器代理服务",
+        }
+
+    if resp.status_code != 200:
+        return {
+            "status": "error",
+            "reason": f"web-access CDP proxy returned HTTP {resp.status_code}",
+            "retryable": True,
+            "action_required": "fix_config",
+            "action_hint": "检查 web-access 代理地址与本地 Chrome 调试连接",
+        }
+
+    target_id = None
+    try:
+        target_id = _legacy_cdp_open_tab(XHS_WEB_ACCESS_PROBE_URL, wait_seconds=1.0, config=config)
+        if not target_id:
+            return {
+                "status": "error",
+                "reason": "web-access CDP proxy could not open xiaohongshu probe page",
+                "retryable": True,
+                "action_required": "fix_config",
+                "action_hint": "检查 web-access 代理是否已连接到本地 Chrome",
+            }
+        probe = _legacy_cdp_eval_json(target_id, _xiaohongshu_login_probe_js(), config=config)
+        if not isinstance(probe, dict):
+            return {
+                "status": "error",
+                "reason": "web-access CDP probe returned invalid response",
+                "retryable": True,
+                "action_required": "retry_later",
+                "action_hint": "稍后重试本地浏览器探测",
+            }
+        if probe.get("logged_in"):
+            return {
+                "status": "success",
+                "reason": "",
+                "retryable": False,
+                "action_required": "none",
+                "action_hint": "",
+            }
+        return {
+            "status": "auth_expired",
+            "reason": "local Chrome has no active xiaohongshu login session",
+            "retryable": False,
+            "action_required": "reauth",
+            "action_hint": "先在本地 Chrome 完成小红书登录，再重试采集",
+        }
+    except requests.Timeout:
+        return {
+            "status": "timeout",
+            "reason": "web-access CDP probe timeout",
+            "retryable": True,
+            "action_required": "retry_later",
+            "action_hint": "稍后重试本地浏览器探测",
+        }
+    except Exception as exc:
+        return {
+            "status": "error",
+            "reason": str(exc),
+            "retryable": True,
+            "action_required": "fix_config",
+            "action_hint": "检查 web-access 代理、Chrome 调试端口和页面访问状态",
+        }
+    finally:
+        if target_id:
+            _legacy_cdp_close_tab(target_id, config=config)
 
 
 def _legacy_cdp_open_tab(url: str, wait_seconds: float = 2.0, config: dict[str, Any] | None = None) -> str | None:
@@ -493,7 +566,8 @@ def _legacy_cdp_eval(target_id: str, js: str, config: dict[str, Any] | None = No
     resp = requests.post(
         f"{_cdp_base(config)}/eval",
         params={"target": target_id},
-        data=js,
+        data=js.encode("utf-8"),
+        headers={"Content-Type": "text/plain; charset=utf-8"},
         timeout=_cdp_timeout(config),
     )
     return resp.text
@@ -502,9 +576,24 @@ def _legacy_cdp_eval(target_id: str, js: str, config: dict[str, Any] | None = No
 def _legacy_cdp_eval_json(target_id: str, js: str, config: dict[str, Any] | None = None) -> dict | list | None:
     raw = _legacy_cdp_eval(target_id, js, config=config)
     try:
-        return json.loads(raw)
+        parsed = json.loads(raw)
     except (json.JSONDecodeError, TypeError):
         return None
+    if isinstance(parsed, dict) and "value" in parsed:
+        value = parsed.get("value")
+        if isinstance(value, (dict, list)):
+            return value
+        if isinstance(value, str):
+            try:
+                inner = json.loads(value)
+                if isinstance(inner, (dict, list)):
+                    return inner
+            except json.JSONDecodeError:
+                return None
+        return None
+    if isinstance(parsed, (dict, list)):
+        return parsed
+    return None
 
 
 def _legacy_cdp_scroll(target_id: str, y: int = 3000, config: dict[str, Any] | None = None) -> None:
@@ -522,7 +611,8 @@ def _legacy_cdp_click(target_id: str, selector: str, config: dict[str, Any] | No
     requests.post(
         f"{_cdp_base(config)}/click",
         params={"target": target_id},
-        data=selector,
+        data=selector.encode("utf-8"),
+        headers={"Content-Type": "text/plain; charset=utf-8"},
         timeout=_cdp_timeout(config),
     )
     return {"status": "clicked", "selector": selector}
@@ -568,6 +658,38 @@ cdp_fill = browser_fill
 cdp_screenshot = browser_screenshot
 cdp_close_tab = browser_close_tab
 cdp_fetch_page = browser_fetch_page
+
+
+def _xiaohongshu_login_probe_js() -> str:
+    return """(() => {
+        const cookie = document.cookie || '';
+        const href = location.href || '';
+        const text = document.body?.innerText || '';
+        const hasA1 = /(^|; )a1=/.test(cookie);
+        const hasWebSession = /(^|; )web_session=/.test(cookie);
+        const hasXsecappid = /(^|; )xsecappid=/.test(cookie);
+        const creatorSignals = [
+            '[placeholder*="标题"]',
+            '#post-title',
+            '.ql-editor',
+            '.ProseMirror',
+        ].some((selector) => Boolean(document.querySelector(selector)));
+        const creatorLoginRedirect = href.includes('creator.xiaohongshu.com/login');
+        const loginHints = /(登录|注册|扫码登录|手机号登录|验证码登录)/.test(text);
+        const siteLoggedIn = hasA1 && hasXsecappid;
+        const creatorReady = creatorSignals || (siteLoggedIn && !creatorLoginRedirect);
+        return JSON.stringify({
+            logged_in: siteLoggedIn || creatorReady,
+            site_logged_in: siteLoggedIn,
+            creator_ready: creatorReady,
+            creator_login_redirect: creatorLoginRedirect,
+            has_a1: hasA1,
+            has_web_session: hasWebSession,
+            has_xsecappid: hasXsecappid,
+            login_hints: loginHints,
+            url: href,
+        });
+    })()"""
 
 
 def _default_extract_js() -> str:

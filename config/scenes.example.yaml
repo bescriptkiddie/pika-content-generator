@@ -112,13 +112,9 @@ scenes:
             feed: ["xhs_cli_feed", "bb_feed", "browser_feed"]
             cross_platform: ["hosted_cross_platform"]
           cross_platforms: ["zhihu", "toutiao", "douyin", "bilibili", "36kr"]
-          browser_backend: playwright_persistent
-          user_data_dir: ~/.pikaengine/playwright/xiaohongshu
-          playwright_channel: chrome
-          headless: false
-          startup_timeout_ms: 30000
-          action_timeout_ms: 15000
-          navigation_timeout_ms: 30000
+          browser_backend: cdp_http
+          cdp_base: http://127.0.0.1:3456
+          browser_request_timeout: 20
           dailyhot_api_base: http://localhost:6688
           fetch_details: false
           detail_top_n: 3
@@ -173,7 +169,7 @@ scenes:
           min_score: 0.6
           top_n: 5
       m3_generate:
-        model: "deepseek-chat"
+        model: "claude-sonnet-4-6"
         template: "xiaohongshu_post"
         knowledge_sources: ["dan_koe", "naval", "alex_hormozi"]
       m4_execute:
@@ -227,7 +223,7 @@ scenes:
       m2_analyze:
         type: "keyword_gap"
       m3_generate:
-        model: "deepseek-chat"
+        model: "claude-sonnet-4-6"
         template: "geo_article"
         knowledge_sources: ["dan_koe", "alex_hormozi", "james_clear", "ryan_holiday", "naval"]
       m4_execute:

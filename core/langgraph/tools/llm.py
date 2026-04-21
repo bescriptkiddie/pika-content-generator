@@ -1,4 +1,4 @@
-"""LLM client — Anthropic Messages API (智谱 GLM 兼容)"""
+"""LLM client — Claude-compatible Messages API"""
 
 import os
 import json
@@ -27,18 +27,25 @@ def _load_dotenv():
             os.environ[key] = value
 
 
+def _normalize_base_url(base_url: str) -> str:
+    base_url = base_url.rstrip("/")
+    if base_url.endswith("/v1"):
+        return base_url
+    return f"{base_url}/v1"
+
+
 def _get_config() -> dict:
     global _config
     if _config is None:
         _load_dotenv()
         api_key = os.getenv("LLM_API_KEY", "")
-        base_url = os.getenv("LLM_BASE_URL", "https://open.bigmodel.cn/api/anthropic")
+        base_url = os.getenv("LLM_BASE_URL", "https://api.anthropic.com")
         if not api_key:
             raise ValueError("LLM_API_KEY not set. Copy .env.example to .env and fill in your key.")
         _config = {
             "api_key": api_key,
-            "base_url": base_url.rstrip("/"),
-            "model": os.getenv("LLM_MODEL", "glm-5.1"),
+            "base_url": _normalize_base_url(base_url),
+            "model": os.getenv("LLM_MODEL", "claude-sonnet-4-6"),
         }
     return _config
 
@@ -50,10 +57,10 @@ def llm_chat(
     temperature: float = 0.7,
     max_tokens: int = 4000,
 ) -> str:
-    """Send a message via Anthropic Messages API and return response text."""
+    """Send a message via Claude-compatible Messages API and return response text."""
     cfg = _get_config()
     model = model or cfg["model"]
-    url = f"{cfg['base_url']}/v1/messages"
+    url = f"{cfg['base_url']}/messages"
 
     headers = {
         "x-api-key": cfg["api_key"],
@@ -94,7 +101,6 @@ def llm_chat_json(
 
     raw = llm_chat(prompt, system=system, model=model, temperature=temperature)
 
-    # Strip markdown code fences
     text = raw.strip()
     if text.startswith("```"):
         lines = text.split("\n")

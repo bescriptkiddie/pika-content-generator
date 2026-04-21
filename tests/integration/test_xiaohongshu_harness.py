@@ -17,7 +17,9 @@ def test_compile_run_plan_for_xiaohongshu_variant():
     assert "acquire" in plan["stages"]
     assert "generate" in plan["stages"]
     assert acquire_config["mode"] == "trending"
-    assert acquire_config["browser_backend"] == "playwright_persistent"
+    assert acquire_config["browser_backend"] == "cdp_http"
+    assert acquire_config["cdp_base"] == "http://127.0.0.1:3456"
+    assert acquire_config["browser_request_timeout"] == 20
     assert acquire_config["provider_order"]["search"] == ["xhs_cli_search", "bb_search", "browser_search"]
     assert execute_config["browser_backend"] == "playwright_persistent"
 
@@ -175,10 +177,9 @@ def test_xiaohongshu_runner_passes_browser_config_to_gateway(tmp_path, monkeypat
 
     runner.run(scene="xiaohongshu_trending", trigger="test", dry_run=True, run_id="config-pass-through")
 
-    assert seen["config"]["browser_backend"] == "playwright_persistent"
-    assert seen["config"]["user_data_dir"] == "~/.pikaengine/playwright/xiaohongshu"
-    assert seen["config"]["playwright_channel"] == "chrome"
-    assert seen["config"]["startup_timeout_ms"] == 30000
+    assert seen["config"]["browser_backend"] == "cdp_http"
+    assert seen["config"]["cdp_base"] == "http://127.0.0.1:3456"
+    assert seen["config"]["browser_request_timeout"] == 20
     assert seen["config"]["provider_order"]["feed"] == ["xhs_cli_feed", "bb_feed", "browser_feed"]
 
 
